@@ -5,6 +5,11 @@ const db = new Sequelize('rover.db', 'username', 'password', {
   storage: './rover.db'
 });
 
+// const db = new Sequelize('rover', 'root', '123lqsym)(*', {
+//   dialect: 'mysql',
+//   host: '35.197.70.0'
+// });
+
 const User = require('./model/user')(db);
 
 const Sitter = require('./model/sitter')(db);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import axios from 'axios'
+import { getUsers } from './request'
 
 class App extends Component {
   constructor() {
@@ -14,15 +14,12 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios({
-      method: 'get',
-      url: 'api/users',
-    })
-    .then(p => {
+    getUsers().then(users => {
+      console.log(users);
       this.setState({
-        users: p.data
+        users
       });
-    })
+    });
   }
 
   render() {

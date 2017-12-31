@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const User = db => db.define('user', {
+const UserModel = db => db.define('user', {
   userid: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -23,4 +23,6 @@ const User = db => db.define('user', {
   timestamps: false
 });
 
-module.exports = User;
+// TODO - Valdation functions
+
+module.exports = UserModel;
