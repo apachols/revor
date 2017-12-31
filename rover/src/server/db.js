@@ -1,4 +1,3 @@
-// db
 const Sequelize = require('sequelize');
 
 // TODO CONFIG
