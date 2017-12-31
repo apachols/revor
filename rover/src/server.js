@@ -14,7 +14,9 @@ const accessLogStream = fs.createWriteStream(__dirname + '/../logs/access.log',
                                              { flags: 'a' });
 
 app.use(morgan('combined', { stream: accessLogStream })); // file
-app.use(morgan('dev')); // log to console in concise format
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev')); // log to console in concise format
+}
 
 const serve = require('koa-static');
 app.use(serve('./build'));
@@ -24,9 +26,6 @@ app.use(compress());
 
 // routes
 router
-  // .get('/', async function(ctx) {
-  //   ctx.body = 'Hello World';
-  // })
   .get('/time', async function(ctx) {
     ctx.body = Math.floor(new Date() / 1000);
   })
@@ -34,11 +33,6 @@ router
     const db = await dbPromise;
     const users = await db.all('SELECT * FROM user order by userid desc');
     ctx.body = JSON.stringify(users);
-  })
-  .get('/migrate', async function(ctx) {
-    const db = await dbPromise;
-    db.migrate({ migrationsPath: './migrations' });
-    ctx.body = 'Database Created';
   });
 
 app.use(router.routes());
