@@ -15,8 +15,8 @@ class App extends Component {
 
   componentWillMount() {
     axios({
-      method:'get',
-      url:'/api/users',
+      method: 'get',
+      url: 'api/users',
     })
     .then(p => {
       this.setState({
