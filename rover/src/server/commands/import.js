@@ -1,18 +1,8 @@
-const Sequelize = require('sequelize');
+const db = require('../db');
 
-const db = new Sequelize('rover.db', 'username', 'password', {
-  dialect: 'sqlite',
-  storage: './rover.db'
-});
+const User = require('../model/user')(db);
 
-// const db = new Sequelize('rover', 'root', '123lqsym)(*', {
-//   dialect: 'mysql',
-//   host: '35.197.70.0'
-// });
-
-const User = require('./model/user')(db);
-
-const Sitter = require('./model/sitter')(db);
+const Sitter = require('../model/sitter')(db);
 
 const runImport = async () => {
   await Promise.all([

@@ -8,7 +8,7 @@ const app = module.exports = new Koa();
 const serve = require('koa-static');
 app.use(serve('./build'));
 
-compress = require('koa-compress');
+const compress = require('koa-compress');
 app.use(compress());
 
 // logger
@@ -29,7 +29,6 @@ const router = require('./routes/router')(db);
 // Start
 //
 app.use(router.routes());
-
 app.listen(3030);
 console.log('app listening on 3030');
 

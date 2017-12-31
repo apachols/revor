@@ -2,7 +2,7 @@
   "name": "rover",
   "version": "0.1.0",
   "description": "An interview coding project for rover.com",
-  "homepage": "http://www.adampacholski.com/rover",
+  "homepage": "http://www.adampacholski.com/",
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "./node_modules/.bin/eslint src/server/ && react-scripts build",
+    "pretest": "./node_modules/.bin/eslint src/server/",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
