@@ -1,15 +1,15 @@
 const db = require('../db');
 
 const UserModel = require('../model/user')(db);
-
 const SitterModel = require('../model/sitter')(db);
-
 const OwnerModel = require('../model/owner')(db);
+const ReviewModel = require('../model/review')(db);
 
 const cleanDB = async () => Promise.all([
   UserModel.sync({ force: true }),
   SitterModel.sync({ force: true }),
-  OwnerModel.sync({ force: true })
+  OwnerModel.sync({ force: true }),
+  ReviewModel.sync({ force: true })
 ]);
 
 const fs = require('fs');
@@ -73,7 +73,7 @@ const processDataRow = async (row) => {
       phone: row.owner_phone_number
     }
   }).spread((user, created) => {
-    return null;
+    return user;
   });
   const owner = await OwnerModel.findOrCreate({
     where: {
