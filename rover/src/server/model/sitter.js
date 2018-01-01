@@ -6,9 +6,21 @@ const Sitter = db => db.define('sitter', {
     primaryKey: true,
     autoIncrement: true
   },
-  name: Sequelize.STRING,
+  name: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true
+    }
+  },
   userid: Sequelize.INTEGER,
-  imageid: Sequelize.INTEGER,
+  image: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+      isUrl: true
+    }
+  },
+  // created / updated on most records by default
   created: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW

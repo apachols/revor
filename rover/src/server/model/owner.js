@@ -1,25 +1,25 @@
 const Sequelize = require('sequelize');
 
-const UserModel = db => db.define('user', {
-  userid: {
+const Owner = db => db.define('owner', {
+  ownerid: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  email: {
+  name: {
     type: Sequelize.STRING,
     validate: {
-      isEmail: true
+      notEmpty: true
     }
   },
-  phone: {
+  userid: {
+    type: Sequelize.INTEGER,
+  },
+  image: {
     type: Sequelize.STRING,
     validate: {
-      isPhone: (value) => {
-        if (!value || !(/^\+\d*$/g).test(value) || value.length !== 12) {
-          throw new Error('Invalid phone number');
-        }
-      }
+      isUrl: true,
+      notEmpty: true
     }
   },
   // created / updated on most records by default
@@ -32,10 +32,9 @@ const UserModel = db => db.define('user', {
     defaultValue: Sequelize.NOW
   }
 }, {
-  // sequelize likes to pluralize table names
-  freezeTableName: true,
-  tableName: 'user',
+    freezeTableName: true,
+  tableName: 'owner',
   timestamps: false
 });
 
-module.exports = UserModel;
+module.exports = Owner;

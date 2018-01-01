@@ -6,11 +6,13 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "csvtojson": "^1.1.9",
     "koa": "^2.4.1",
     "koa-compress": "^2.0.0",
     "koa-morgan": "^1.0.1",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
+    "log4js": "^2.4.1",
     "mysql2": "^1.5.1",
     "node-cleanup": "^2.1.2",
     "react": "^16.2.0",
