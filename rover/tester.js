@@ -7,13 +7,11 @@ const tester = async () => {
   // await Promise.all([
   //   OverallRankModel.sync({force: true}),
   // ]);
-  const o = await OverallRankModel.findOrCreate({
+  const o = await OverallRankModel.findOne({
     where: { sitterid: 1 }
-  }).then(o => {
-    console.log(o);
-    return o.calculateOverallRank();
-  })
-  return o;
+  });
+  return o.recalculateOverallRank(5);
+
   // const o = await OverallRankModel.create({
   //   sitterid: 1
   // });

@@ -70,15 +70,20 @@ const OverallRankModel = db => {
   model.prototype.roverWeightedAverage = function(sitterScore, ratingCount, ratingSum, ratingScore) {
     const sitterScoreWeight = Number((Math.max(10 - ratingCount, 0) / 10).toFixed(1));
     const ratingScoreWeight = Number((Math.min(ratingCount, 10) / 10).toFixed(1));
-    return Number((sitterScore*sitterScoreWeight).toFixed(4))
-         + Number((ratingScore*ratingScoreWeight).toFixed(4));
+    const overallRank = Number((sitterScore*sitterScoreWeight).toFixed(4))
+                      + Number((ratingScore*ratingScoreWeight).toFixed(4));
+    return Number((overallRank).toFixed(4));
   };
 
   model.prototype.recalculateOverallRank = async function(rating) {
+    if ([1,2,3,4,5].indexOf(rating) === -1) {
+      throw new Error('Rating outside of int 1-5 in recalculateOverallRank');
+    }
+
     const ratingCount = this.getDataValue('ratingcount') + 1
     this.setDataValue('ratingcount', ratingCount);
 
-    const ratingTotal = Number((this.getDataValue('ratingtotal') + rating).toFixed(4));
+    const ratingTotal = parseInt(this.getDataValue('ratingtotal')) + parseInt(rating);
     this.setDataValue('ratingtotal', ratingTotal);
 
     const ratingScore = Number((ratingCount > 0 ? ratingTotal / ratingCount: 0).toFixed(4));
