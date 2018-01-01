@@ -10,6 +10,22 @@ describe('sitter model tests', () => {
   const image = 'http://placekitten.com/g/500/500?user=12';
   const validSitter = { name, image, userid };
 
+  describe('sitter score', () => {
+    const model = SitterModel(testDB);
+    it('should calculate correctly for five letters', () => {
+      const s = model.build({ ...validSitter, name: 'fivel' });
+      expect(s.sitterScore()).toEqual(0.96);
+    });
+    it('should calculate correctly for duplicate letters', () => {
+      const s = model.build({ ...validSitter, name: 'ffffff' });
+      expect(s.sitterScore()).toEqual(0.19);
+    });
+    it('should calculate correctly for non letters', () => {
+      const s = model.build({ ...validSitter, name: '293847932874' });
+      expect(s.sitterScore()).toEqual(0);
+    });
+  });
+
   describe('data validation', () => {
     const model = SitterModel(testDB);
     const testBadInput = async (input) => {

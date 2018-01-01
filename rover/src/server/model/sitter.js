@@ -49,6 +49,26 @@ const SitterModel = db => {
   // Foreign key relationships
   model.hasOne(UserModel, { as: 'User', foreignKey: 'userid', targetKey: 'userid' });
 
+  // Sitter score
+  model.prototype.sitterScore = function() {
+    const alpha = 'abcdefghijklmnopqrstuvwxyz';
+    const name = this.get('name').toLowerCase();
+
+    const map = {};
+    for (let ii=0; ii < name.length; ii++) {
+      if (alpha.indexOf(name[ii]) !== -1) {
+        map[name[ii]] = 1;
+      }
+    }
+    let count = 0;
+    for (let k in map) {
+      if (map.hasOwnProperty(k)) {
+        count++;
+      }
+    }
+    return Number((5 * count / alpha.length).toFixed(2));
+  }
+
   return model;
 }
 

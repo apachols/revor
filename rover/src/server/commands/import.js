@@ -84,7 +84,14 @@ const processDataRow = async (row) => {
   }).spread((owner, created) => {
     return owner;
   });
-  console.log(`sitter ${sitter.get('sitterid')} owner ${owner.get('ownerid')}`);
+  await ReviewModel.factory({
+    rating: row.rating,
+    ownerid: owner.get('ownerid'),
+    sitterid: sitter.get('sitterid'),
+    text: row.text,
+    start: row.start_date,
+    end: row.end_date
+  });
 }
 
 // DATA WEIRDNESS:
