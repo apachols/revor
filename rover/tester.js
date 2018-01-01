@@ -16,11 +16,8 @@ const tester = async () => {
     ReviewModel.sync({force: true}),
     ReviewTextModel.sync({force: true})
   ]);
-  const review = await ReviewModel.create(validReview);
-  console.log('created review', review.get('reviewid'));
   const text = 'I ate an apple on a pirate ship';
-  const reviewText = await ReviewTextModel.create({ reviewid: review.get('reviewid'), text });
-  console.log('created', reviewText.get('reviewtextid'));
+  return ReviewModel.factory({ ...validReview, text });
 }
 
 tester().then(() => console.log('Done!'));

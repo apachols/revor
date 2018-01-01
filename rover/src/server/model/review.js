@@ -1,5 +1,15 @@
 const Sequelize = require('sequelize');
 
+// TODO omg error checking?
+const factory = (reviewModel) => (reviewtextmodel) => (data) => {
+  console.log('here', reviewModel);
+  return reviewModel.create(data).then((review) => {
+    const text = data.text;
+    return reviewtextmodel.create({ reviewid: review.get('reviewid'), text });
+  }).then((reviewText) => {
+  });
+}
+
 const Review = db => {
   const model = db.define('owner', {
     reviewid: {
@@ -57,8 +67,14 @@ const Review = db => {
     timestamps: false
   });
 
+  // Set up foreignKey relationship with reviewtext
   const ReviewText = require('./reviewtext')(db);
   ReviewText.belongsTo(model, { foreignKey: 'reviewid', targetKey: 'reviewid' });
+
+  // provide a nice method for creating both objects at once...
+  model.factory = factory(model)(ReviewText);
   return model;
 }
+
+
 module.exports = Review;
