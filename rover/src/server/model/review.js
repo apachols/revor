@@ -1,27 +1,40 @@
 const Sequelize = require('sequelize');
 
-// TODO omg error checking?
-const factory = (reviewModel) => (reviewtextmodel) => (data) => {
-  console.log('here', reviewModel);
-  return reviewModel.create(data).then((review) => {
-    const text = data.text;
-    return reviewtextmodel.create({ reviewid: review.get('reviewid'), text });
-  }).then((reviewText) => {
-  });
-}
+const ReviewModel = db => {
 
-const Review = db => {
+  const ReviewTextModel = require('./reviewtext')(db);
+  const SitterModel = require('./sitter')(db);
+  const OwnerModel = require('./owner')(db);
+
   const model = db.define('owner', {
     reviewid: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    sitter: {
+    reviewtextid: {
       type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        'model': ReviewTextModel,
+        'key': 'reviewtextid'
+      },
+    },
+    sitterid: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        'model': SitterModel,
+        'key': 'sitterid'
+      },
     },
     ownerid: {
       type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        'model': OwnerModel,
+        'key': 'ownerid'
+      },
     },
     rating: {
       type: Sequelize.INTEGER,
@@ -67,14 +80,21 @@ const Review = db => {
     timestamps: false
   });
 
-  // Set up foreignKey relationship with reviewtext
-  const ReviewText = require('./reviewtext')(db);
-  ReviewText.belongsTo(model, { foreignKey: 'reviewid', targetKey: 'reviewid' });
+  // Set up foreignKey relationships
+  model.hasOne(ReviewTextModel, { as: 'Text', foreignKey: 'reviewtextid', targetKey: 'reviewtextid' });
+  model.hasOne(SitterModel, { as: 'Sitter', foreignKey: 'sitterid', targetKey: 'sitterid' });
+  model.hasOne(OwnerModel, { as: 'Owner', foreignKey: 'ownerid', targetKey: 'ownerid' });
 
-  // provide a nice method for creating both objects at once...
-  model.factory = factory(model)(ReviewText);
+  // creates a review and reviewtext record
+  model.factory = (data) => {
+    const text = data.text;
+    return ReviewTextModel.create({ text }).then(async (reviewtext) => {
+      const reviewtextid = reviewtext.get('reviewtextid');
+      return model.create({ ...data, reviewtextid });
+    });
+  };
+
   return model;
 }
 
-
-module.exports = Review;
+module.exports = ReviewModel;

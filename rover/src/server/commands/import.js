@@ -84,6 +84,7 @@ const processDataRow = async (row) => {
   }).spread((owner, created) => {
     return owner;
   });
+  console.log(`sitter ${sitter.get('sitterid')} owner ${owner.get('ownerid')}`);
 }
 
 // DATA WEIRDNESS:
@@ -98,6 +99,8 @@ const processDataRow = async (row) => {
 // Nicole G.|171|user6354@gmail.com|+17818056323
 // Lisa H.|242|user9272@hotmail.com|+19050712311
 // Nicole G.|247|user1983@gmail.com|+17332435022
+//
+// TODO Oh wait I can add sanity check SQLs to this program!
 
 const runImport = async () => {
   logger.info('Starting import');

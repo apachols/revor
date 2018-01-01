@@ -1,6 +1,6 @@
 import OwnerModel from './owner'
 
-import testDB from '../db';
+import { testDB } from '../db';
 
 jest.mock('../db');
 

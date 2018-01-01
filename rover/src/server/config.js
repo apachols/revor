@@ -20,9 +20,10 @@ module.exports = environment => {
     const config = require(path.resolve(appDirectory, configPath));
     return config;
   } catch (error) {
-    const errmsg = 'Unable to load config: ' + configPath;
-    console.error(errmsg);
-    console.error(error);
+    // const errmsg = 'Unable to load config: ' + configPath;
+    // TODO can we turn this logging off in test mode?
+    // console.error(errmsg);
+    // console.error(error);
     throw error;
   }
 };

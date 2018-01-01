@@ -8,13 +8,16 @@ const UserModel = db => db.define('user', {
   },
   email: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
       isEmail: true
     }
   },
   phone: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
+      notEmpty: true,
       isPhone: (value) => {
         if (!value || !(/^\+\d*$/g).test(value) || value.length !== 12) {
           throw new Error('Invalid phone number');

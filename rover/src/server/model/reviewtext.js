@@ -6,9 +6,6 @@ const ReviewText = db => db.define('reviewtext', {
     primaryKey: true,
     autoIncrement: true
   },
-  reviewid: {
-    type: Sequelize.INTEGER
-  },
   text: {
     type: Sequelize.STRING(2048),
     validate: {
