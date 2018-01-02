@@ -10,7 +10,7 @@ const tester = async () => {
   const o = await OverallRankModel.findOne({
     where: { sitterid: 1 }
   });
-  return o.recalculateOverallRank(5);
+  return o.addRatingAndRecalcOverallRank(5);
 
   // const o = await OverallRankModel.create({
   //   sitterid: 1

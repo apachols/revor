@@ -1,20 +1,57 @@
 const db = require('../db');
 
+const fs = require('fs');
+const path = require('path');
+const appDirectory = fs.realpathSync(process.cwd());
+
+const log4js = require('log4js');
+log4js.configure({
+  appenders: {
+    import: {
+      type: 'file', filename: path.resolve(appDirectory, 'logs/import.log')
+    }
+  },
+  categories: { default: { appenders: ['import'], level: 'info' } }
+});
+const logger = log4js.getLogger('import');
+
 const UserModel = require('../model/user')(db);
 const SitterModel = require('../model/sitter')(db);
 const OwnerModel = require('../model/owner')(db);
 const ReviewModel = require('../model/review')(db);
+const ReviewTextModel = require('../model/reviewtext')(db);
 
-const cleanDB = async () => Promise.all([
-  UserModel.sync({ force: true }),
-  SitterModel.sync({ force: true }),
-  OwnerModel.sync({ force: true }),
-  ReviewModel.sync({ force: true })
-]);
+const cleanDB = async () => {
+  await ReviewTextModel.drop();
+  logger.info('reviewtext drop');  
+  await ReviewModel.drop();
+  logger.info('review drop');
+  await SitterModel.drop();
+  logger.info('sitter drop');
+  await OwnerModel.drop();
+  logger.info('owner drop');
+  await UserModel.drop();
+  logger.info('user drop');
+  await UserModel.sync();
+  logger.info('user sync');
+  await SitterModel.sync();
+  logger.info('sitter sync');
+  await OwnerModel.sync();
+  logger.info('owner sync');
+  await ReviewTextModel.sync();
+  logger.info('reviewtext sync');
+  await ReviewModel.sync();
+  logger.info('review sync');
+};
 
-const fs = require('fs');
-const path = require('path');
-const appDirectory = fs.realpathSync(process.cwd());
+// const cleanDB = async () => Promise.all([
+//   UserModel.sync(),
+//   SitterModel.sync({ force: true }),
+//   OwnerModel.sync({ force: true }),
+//   ReviewTextModel.sync({ force: true }),
+//   ReviewModel.sync({ force: true })
+// ]);
+
 const csvFilePath = path.resolve(appDirectory, 'data/reviews.csv');
 const csv = require('csvtojson');
 
@@ -37,16 +74,6 @@ const getDataCSV = async () => {
   })
 }
 
-const log4js = require('log4js');
-log4js.configure({
-  appenders: {
-    import: {
-      type: 'file', filename: path.resolve(appDirectory, 'logs/import.log')
-    }
-  },
-  categories: { default: { appenders: ['import'], level: 'info' } }
-});
-const logger = log4js.getLogger('import');
 
 // currently adds all the sitters to the db
 const processDataRow = async (row) => {
@@ -113,6 +140,7 @@ const runImport = async () => {
   logger.info('Starting import');
 
   await cleanDB();
+  logger.info('Clean db complete');
   const data = await getDataCSV();
   for (let row of data) {
     await(processDataRow(row));

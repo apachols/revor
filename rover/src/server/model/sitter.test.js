@@ -14,11 +14,11 @@ describe('sitter model tests', () => {
     const model = SitterModel(testDB);
     it('should calculate correctly for five letters', () => {
       const s = model.build({ ...validSitter, name: 'fivel' });
-      expect(s.sitterScore()).toEqual(0.96);
+      expect(s.sitterScore()).toEqual(0.9615);
     });
     it('should calculate correctly for duplicate letters', () => {
       const s = model.build({ ...validSitter, name: 'ffffff' });
-      expect(s.sitterScore()).toEqual(0.19);
+      expect(s.sitterScore()).toEqual(0.1923);
     });
     it('should calculate correctly for non letters', () => {
       const s = model.build({ ...validSitter, name: '293847932874' });
