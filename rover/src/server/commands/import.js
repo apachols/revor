@@ -20,28 +20,26 @@ const SitterModel = require('../model/sitter')(db);
 const OwnerModel = require('../model/owner')(db);
 const ReviewModel = require('../model/review')(db);
 const ReviewTextModel = require('../model/reviewtext')(db);
+const OverallRankModel = require('../model/overallrank')(db);
 
 const cleanDB = async () => {
-  await ReviewTextModel.drop();
-  logger.info('reviewtext drop');  
-  await ReviewModel.drop();
-  logger.info('review drop');
-  await SitterModel.drop();
-  logger.info('sitter drop');
-  await OwnerModel.drop();
-  logger.info('owner drop');
-  await UserModel.drop();
-  logger.info('user drop');
-  await UserModel.sync();
-  logger.info('user sync');
-  await SitterModel.sync();
-  logger.info('sitter sync');
-  await OwnerModel.sync();
-  logger.info('owner sync');
-  await ReviewTextModel.sync();
-  logger.info('reviewtext sync');
-  await ReviewModel.sync();
-  logger.info('review sync');
+  // To preserve foreign key constraints, drop and re-create
+  // the following order:  rank before review, review before sitter, etc.
+  const models = [
+    OverallRankModel,
+    ReviewModel,
+    ReviewTextModel,
+    SitterModel,
+    OwnerModel,
+    UserModel
+  ];
+  for (let m of models) {
+    await m.drop();
+  }
+  models.reverse();
+  for (let m of models) {
+    await m.sync();
+  }
 };
 
 // const cleanDB = async () => Promise.all([
@@ -74,8 +72,7 @@ const getDataCSV = async () => {
   })
 }
 
-
-// currently adds all the sitters to the db
+// add all the data to the database!
 const processDataRow = async (row) => {
   const sitterUser = await UserModel.findOrCreate({
     where: {
@@ -119,6 +116,19 @@ const processDataRow = async (row) => {
     start: row.start_date,
     end: row.end_date
   });
+
+  const overallrank = await OverallRankModel.findOrCreate({
+    where: { sitterid: sitter.get('sitterid') }
+  }).spread((overallrank, created) => {
+    if (created) {
+      overallrank.set('sitterscore', sitter.sitterScore());
+    }
+    return overallrank;
+  });
+
+  // Do the quick calculation by adding rank here, then we'll recalc all the
+  // overall rank records after all the review records have been added and compare
+  await overallrank.addRatingAndRecalcOverallRank(parseInt(row.rating, 10));
 }
 
 // DATA WEIRDNESS:
@@ -139,13 +149,21 @@ const processDataRow = async (row) => {
 const runImport = async () => {
   logger.info('Starting import');
 
+  console.time('cleanDB');
   await cleanDB();
+  console.timeEnd('cleanDB');
+
   logger.info('Clean db complete');
+  console.time('readCSV');
   const data = await getDataCSV();
+  console.timeEnd('readCSV');
+
+  console.time('processData');
   for (let row of data) {
     await(processDataRow(row));
   }
-  db.close().then(() => logger.info('Import complete'));
+  console.timeEnd('processData');
+  await db.close().then(() => logger.info('Import complete'));
 }
 
 runImport().catch(e => {

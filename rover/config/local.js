@@ -40,7 +40,7 @@ module.exports = {
   name: 'local',
   database: ['rover.db', 'username', 'password', {
     dialect: 'sqlite',
-    // logging: false,
+    logging: false,
     storage: './rover.db',
     operatorsAliases
   }]

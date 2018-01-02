@@ -10,33 +10,30 @@ const image = 'http://placekitten.com/g/500/500?user=12';
 const validOwner = { name, image, userid };
 
 describe('data validation', () => {
-  // TODO is there some way to condense these?
-  it('should not allow empty name', done => {
-    const Owner = OwnerModel(testDB);
-    const o = Owner.build({ ...validOwner, name: ''});
-    o.validate().catch(e => {
+  const model = OwnerModel(testDB);
+  const testBadInput = async (input) => {
+    try {
+      await input.validate();
+      expect(true).toBe('Caught error');
+    } catch (e) {
       expect(e.name).toMatch('SequelizeValidationError');
-      done();
-    });
+    }
+  }
+  it('should error on blank name', async () => {
+    await testBadInput(model.build({ ...validOwner, name: '' }));
   });
-  it('should not allow empty image', done => {
-    const Owner = OwnerModel(testDB);
-    const o = Owner.build({ ...validOwner, image: ''});
-    o.validate().catch(e => {
-      expect(e.name).toMatch('SequelizeValidationError');
-      done();
-    });
+  it('should error on blank image', async () => {
+    await testBadInput(model.build({ ...validOwner, image: '' }));
   });
-  it('should not allow bad url image', done => {
-    const Owner = OwnerModel(testDB);
-    const o = Owner.build({ ...validOwner, image: '/dev/null'});
-    o.validate().catch(e => {
-      expect(e.name).toMatch('SequelizeValidationError');
-      done();
-    });
+  it('should error on non-url image', async () => {
+    await testBadInput(model.build({ ...validOwner, image: '24601' }));
   });
-});
-
-describe('database operations', () => {
-  // TODO, or maybe move this to integration test
+  it('should error on missing userid', async () => {
+    await testBadInput(model.build({ ...validOwner, userid: undefined }));
+  });
+  it('should validate if all fields ok', async () => {
+    const o = model.build({ ...validOwner });
+    await o.validate();
+    expect(o.get('name')).toBe(name);
+  });
 });

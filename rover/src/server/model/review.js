@@ -85,6 +85,7 @@ const ReviewModel = db => {
   model.hasOne(SitterModel, { as: 'Sitter', foreignKey: 'sitterid', targetKey: 'sitterid' });
   model.hasOne(OwnerModel, { as: 'Owner', foreignKey: 'ownerid', targetKey: 'ownerid' });
 
+  // pull all the review ratings for a sitter, and return the count and total
   model.getRatingStats = async function(sitterid) {
     const where = { 'where': { sitterid } };
     const records = await model.findAll(where);
