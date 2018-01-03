@@ -4,16 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const appDirectory = fs.realpathSync(process.cwd());
 
-const log4js = require('log4js');
-log4js.configure({
-  appenders: {
-    import: {
-      type: 'file', filename: path.resolve(appDirectory, 'logs/import.log')
-    }
-  },
-  categories: { default: { appenders: ['import'], level: 'info' } }
-});
-const logger = log4js.getLogger('import');
+const { logger } = require('../logger');
 
 const DogModel = require('../model/dog')(db);
 const StayModel = require('../model/stay')(db);

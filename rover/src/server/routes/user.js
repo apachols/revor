@@ -1,3 +1,5 @@
+const { logger } = require('../logger');
+
 /*
  * /api/user route handlers
  */
@@ -8,8 +10,8 @@ module.exports = UserModel => {
       ctx.body = JSON.stringify(userData);
     } catch (error) {
       ctx.status = 500;
-      ctx.body = 'Infernal Server Error';
-      console.error('ERROR: getAllUsers:', error);
+      ctx.body = 'Internal Server Error';
+      logger.error('ERROR: getAllUsers:', error);
     }
   }
 

@@ -1,12 +1,29 @@
-const morgan = require('koa-morgan');
 const fs = require('fs');
+const path = require('path');
+const appDirectory = fs.realpathSync(process.cwd());
 
-// server logs to disk in apache combined format
+// HTTP request logger (to file)
+const morgan = require('koa-morgan');
 const accessLogStream = fs.createWriteStream(
-  __dirname + '/../../logs/access.log', { flags: 'a' }
+  path.resolve(appDirectory, 'logs/access.log'), { flags: 'a' }
 );
+
+// Turn off normal file-based error logging during test runs
+const useEnvironmentLevel = (process.env.NODE_ENV === 'test' ? 'fatal': 'info');
+
+// File based loggers for application and commands
+const log4js = require('log4js');
+log4js.configure({
+  appenders: {
+    'application': {
+      type: 'file', filename: path.resolve(appDirectory, 'logs/app.log')
+    }
+  },
+  categories: { default: { appenders: ['application'], level: useEnvironmentLevel } }
+});
 
 module.exports = {
   file: morgan('combined', { stream: accessLogStream }),
-  dev: morgan('dev')
+  dev: morgan('dev'),
+  logger: log4js.getLogger('application')
 }

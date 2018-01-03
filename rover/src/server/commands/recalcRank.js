@@ -1,19 +1,6 @@
 const db = require('../db');
 
-const fs = require('fs');
-const path = require('path');
-const appDirectory = fs.realpathSync(process.cwd());
-
-const log4js = require('log4js');
-log4js.configure({
-  appenders: {
-    'recalc': {
-      type: 'file', filename: path.resolve(appDirectory, 'logs/recalc.log')
-    }
-  },
-  categories: { default: { appenders: ['recalc'], level: 'info' } }
-});
-const logger = log4js.getLogger('recalc');
+const { logger } = require('../logger');
 
 const OverallRankModel = require('../model/overallrank')(db);
 

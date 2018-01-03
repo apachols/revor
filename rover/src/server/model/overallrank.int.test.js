@@ -1,8 +1,5 @@
 import OverallRankModel from './overallrank'
-import ReviewModel from './review'
 import SitterModel from './sitter'
-import UserModel from './user'
-import StayModel from './stay'
 import OwnerModel from './owner'
 
 import { testDB, addStayAndReview, addUserOwnerAndSitter } from '../db';
@@ -12,11 +9,8 @@ const cleanDB = require('../cleandb')(testDB);
 jest.mock('../db');
 
 describe('overallrank model integration tests', () => {
-  const userModel = UserModel(testDB);
   const sitterModel = SitterModel(testDB);
   const ownerModel = OwnerModel(testDB);
-  const stayModel = StayModel(testDB);
-  const reviewModel = ReviewModel(testDB);
 
   beforeAll(async () => {
     await cleanDB();
@@ -30,7 +24,6 @@ describe('overallrank model integration tests', () => {
     await addStayAndReview(sitterid2, ownerid1, '2018-01-01', '2018-01-01', 5, 'woof');
     await addStayAndReview(sitterid2, ownerid1, '2018-01-02', '2018-01-02', 1, 'blah');
   });
-
 
   describe('addRatingAndRecalcOverallRank', () => {
     it('should add a rating correctly and mark dirty when no ratings present', async () => {
@@ -107,7 +100,7 @@ describe('overallrank model integration tests', () => {
 
     it('should pass the 10 rating test listed in the project spec', async () => {
       // sitter #3
-      const { sitterid } = await addUserOwnerAndSitter('Fred');
+      const { sitterid } = await addUserOwnerAndSitter('abcdefghijklm');
 
       const owner = await ownerModel.findOne();
       expect(owner).not.toBeNull();
@@ -116,21 +109,22 @@ describe('overallrank model integration tests', () => {
       const model = OverallRankModel(testDB);
       const o = model.build({ sitterid });
 
-      const reviewmodel = ReviewModel(testDB);
-      for (let ii=1; ii < 15; ii++) {
+      const results = [
+        2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.0, 5.0
+      ];
+      for (let ii=1; ii < 12; ii++) {
         let start = '2018-01-' + String(ii).padStart(2,'0');
         let end = start;
 
         await addStayAndReview(sitterid,ownerid,start,end,5,'woof');
+        await o.calculateOverallRank();
+        expect(o.get('dirty')).toBe(0);
+        expect(o.get('sitterscore')).toBe(2.5);
+        expect(o.get('ratingcount')).toBe(ii);
+        expect(o.get('ratingtotal')).toBe(Math.floor(5*ii));
+        expect(o.get('ratingscore')).toBe(5);
+        expect(o.get('overallrank')).toBe(results[ii]);
       }
-
-      await o.calculateOverallRank();
-      expect(o.get('dirty')).toBe(0);
-      expect(o.get('sitterscore')).toBe(0.7692);
-      expect(o.get('ratingcount')).toBe(14);
-      expect(o.get('ratingtotal')).toBe(70);
-      expect(o.get('ratingscore')).toBe(5);
-      expect(o.get('overallrank')).toBe(5);
     });
   });
 })

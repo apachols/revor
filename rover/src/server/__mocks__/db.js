@@ -8,8 +8,6 @@ const ReviewModel = require('../model/review');
 const SitterModel = require('../model/sitter');
 const StayModel = require('../model/stay');
 
-const cleanDB = require('../cleandb')(testDB);
-
 const addStayAndReview = async (sitterid, ownerid, start, end, rating, text) => {
   const stayModel = StayModel(testDB);
   const reviewModel = ReviewModel(testDB);
