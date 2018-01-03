@@ -1,4 +1,4 @@
-const { appLogger } = require('./logger');
+const { logger } = require('./logger');
 
 const fs = require('fs');
 const path = require('path');
@@ -23,8 +23,8 @@ module.exports = environment => {
     return config;
   } catch (error) {
     const errmsg = 'Unable to load config: ' + configPath;
-    appLogger.error(errmsg);
-    appLogger.error(error);
+    logger.error(errmsg);
+    logger.error(error);
     throw error;
   }
 };
