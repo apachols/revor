@@ -1,74 +1,32 @@
 const initialState = {
-  count: 0,
+  sitters: [],
+  pending: false
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'INCREMENT':
+    case 'SEARCHRESULTS_PENDING':
       return {
         ...state,
-        count: state.count + 1
+        pending: true
       }
 
-    case 'DECREMENT':
+    case 'SEARCHRESULTS_FULFILLED':
+      console.log(action);
       return {
         ...state,
-        count: state.count - 1,
+        pending: false,
+        sitters: action.payload.results
+      }
+
+    case 'SEARCHRESULTS_REJECTED':
+      return {
+        ...state,
+        pending: false,
+        sitters: []
       }
 
     default:
       return state
   }
 }
-
-export const increment = () => {
-  return dispatch => {
-    // dispatch({
-    //   type: INCREMENT_REQUESTED
-    // })
-
-    dispatch({
-      type: 'INCREMENT'
-    })
-  }
-}
-
-// export const incrementAsync = () => {
-//   return dispatch => {
-//     dispatch({
-//       type: INCREMENT_REQUESTED
-//     })
-//
-//     return setTimeout(() => {
-//       dispatch({
-//         type: INCREMENT
-//       })
-//     }, 3000)
-//   }
-// }
-
-export const decrement = () => {
-  return dispatch => {
-    // dispatch({
-    //   type: DECREMENT_REQUESTED
-    // })
-
-    dispatch({
-      type: 'DECREMENT'
-    })
-  }
-}
-//
-// export const decrementAsync = () => {
-//   return dispatch => {
-//     dispatch({
-//       type: DECREMENT_REQUESTED
-//     })
-//
-//     return setTimeout(() => {
-//       dispatch({
-//         type: DECREMENT
-//       })
-//     }, 3000)
-//   }
-// }
