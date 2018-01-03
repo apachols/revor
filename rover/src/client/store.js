@@ -5,13 +5,12 @@ import createHistory from 'history/createBrowserHistory'
 
 import promiseMiddleware from 'redux-promise-middleware';
 
-import { combineReducers } from 'redux'
-import { routerReducer } from 'react-router-redux'
-import search from './reducer'
-const rootReducer = combineReducers({
-  routing: routerReducer,
-  search
-})
+import logger from 'redux-logger'
+// const logger = createLogger({
+//   // ...options
+// });
+
+import rootReducer from './root'
 
 export const history = createHistory()
 
@@ -20,7 +19,8 @@ const enhancers = []
 const middleware = [
   thunk,
   promiseMiddleware(),
-  routerMiddleware(history)
+  routerMiddleware(history),
+  logger
 ]
 
 if (process.env.NODE_ENV === 'development') {

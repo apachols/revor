@@ -10,15 +10,15 @@ const getUsers = async () => {
   };
 };
 
-const getSitters = async () => {
-  const p = await axios({
-    method: 'get',
-    url: 'api/sitter/search',
-  });
-  return {
-    results: p.data
-  };
-};
+// const getSitters = async () => {
+//   const p = await axios({
+//     method: 'get',
+//     url: 'api/sitter/search',
+//   });
+//   return {
+//     results: p.data
+//   };
+// };
 
 export const getSittersSearchResults = () => {
   return dispatch => {
