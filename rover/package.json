@@ -7,6 +7,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "csvtojson": "^1.1.9",
+    "history": "^4.7.2",
     "koa": "^2.4.1",
     "koa-compress": "^2.0.0",
     "koa-morgan": "^1.0.1",
@@ -17,7 +18,12 @@
     "node-cleanup": "^2.1.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "sequelize": "^4.28.6",
     "sqlite3": "^3.1.13"
   },
