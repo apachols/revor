@@ -5,6 +5,7 @@ const ReviewModel = db => {
   const ReviewTextModel = require('./reviewtext')(db);
   const SitterModel = require('./sitter')(db);
   const OwnerModel = require('./owner')(db);
+  const StayModel = require('./stay')(db);
 
   const model = db.define('review', {
     reviewid: {
@@ -36,26 +37,20 @@ const ReviewModel = db => {
         'key': 'ownerid'
       },
     },
+    stayid: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        'model': StayModel,
+        'key': 'stayid'
+      },
+    },
     rating: {
       type: Sequelize.INTEGER,
       validate: {
         isInt: true,
         min: 1,
         max: 5
-      }
-    },
-    start: {
-      type: Sequelize.DATE,
-      validate: {
-        isDate: true,
-        notEmpty: true
-      }
-    },
-    end: {
-      type: Sequelize.DATE,
-      validate: {
-        isDate: true,
-        notEmpty: true
       }
     },
     // created / updated on most records by default

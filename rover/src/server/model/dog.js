@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 
-
-const OwnerModel = db => {
-  const UserModel = require('./user')(db);
-  const model = db.define('owner', {
-    ownerid: {
+const DogModel = db => {
+  const OwnerModel = require('./owner')(db);
+  const model = db.define('dog', {
+    dogid: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
@@ -15,19 +14,12 @@ const OwnerModel = db => {
         notEmpty: true
       }
     },
-    userid: {
+    ownerid: {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {
-        'model': UserModel,
-        'key': 'userid'
-      }
-    },
-    image: {
-      type: Sequelize.STRING,
-      validate: {
-        isUrl: true,
-        notEmpty: true
+        'model': OwnerModel,
+        'key': 'ownerid'
       }
     },
     // created / updated on most records by default
@@ -41,7 +33,7 @@ const OwnerModel = db => {
     }
   }, {
       freezeTableName: true,
-    tableName: 'owner',
+    tableName: 'dog',
     timestamps: false
   });
 
@@ -49,4 +41,4 @@ const OwnerModel = db => {
 }
 
 
-module.exports = OwnerModel;
+module.exports = DogModel;

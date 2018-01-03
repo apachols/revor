@@ -1,23 +1,12 @@
 
 const db = require('./src/server/db');
 
-const OverallRankModel = require('./src/server/model/overallrank')(db);
+const cleanDB = require('./src/server/cleandb')(db);
 
 const tester = async () => {
-  // await Promise.all([
-  //   OverallRankModel.sync({force: true}),
-  // ]);
-  const o = await OverallRankModel.findOne({
-    where: { sitterid: 1 }
-  });
-  return o.addRatingAndRecalcOverallRank(5);
-
-  // const o = await OverallRankModel.create({
-  //   sitterid: 1
-  // });
-  // return o.calculateOverallRank();
+  await cleanDB();
 }
 
-tester().then((o) => {
-  console.log('Done! overallrank: ' + o);
+tester().then(() => {
+  console.log('Done!');
 });

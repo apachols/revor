@@ -1,21 +1,46 @@
 import OverallRankModel from './overallrank'
 import ReviewModel from './review'
+import SitterModel from './sitter'
+import UserModel from './user'
+import StayModel from './stay'
+import OwnerModel from './owner'
 
-import { testDB, setupTestDB } from '../db';
+import { testDB, addStayAndReview, addUserOwnerAndSitter } from '../db';
+
+const cleanDB = require('../cleandb')(testDB);
 
 jest.mock('../db');
 
 describe('overallrank model integration tests', () => {
+  const userModel = UserModel(testDB);
+  const sitterModel = SitterModel(testDB);
+  const ownerModel = OwnerModel(testDB);
+  const stayModel = StayModel(testDB);
+  const reviewModel = ReviewModel(testDB);
+
+  beforeAll(async () => {
+    await cleanDB();
+
+    const user1 = await addUserOwnerAndSitter('Jane');
+    const ownerid1 = user1.ownerid;
+
+    const user2 = await addUserOwnerAndSitter('Adam P');
+    const sitterid2 = user2.sitterid;
+
+    await addStayAndReview(sitterid2, ownerid1, '2018-01-01', '2018-01-01', 5, 'woof');
+    await addStayAndReview(sitterid2, ownerid1, '2018-01-02', '2018-01-02', 1, 'blah');
+  });
+
 
   describe('addRatingAndRecalcOverallRank', () => {
-    beforeAll(() => {
-      return setupTestDB();
-    });
-
     it('should add a rating correctly and mark dirty when no ratings present', async () => {
+      const sitter = await sitterModel.findOne();
+      expect(sitter).not.toBeNull();
+      const sitterid = sitter.get('sitterid');
+
       const model = OverallRankModel(testDB);
       const o = await model.build({
-        sitterid: 1, sitterscore: 3.14
+        sitterid, sitterscore: 3.14
       });
       await o.addRatingAndRecalcOverallRank(5);
       expect(o.get('ratingcount')).toBe(1);
@@ -26,9 +51,13 @@ describe('overallrank model integration tests', () => {
     });
 
     it('should pass the 10 rating test listed in the project spec', async () => {
+      const sitter = await sitterModel.findOne();
+      expect(sitter).not.toBeNull();
+      const sitterid = sitter.get('sitterid');
+
       const model = OverallRankModel(testDB);
       const o = await model.build({
-        sitterid: 1, sitterscore: 2.5, overallrank: 2.5
+        sitterid, sitterscore: 2.5, overallrank: 2.5
       });
       const results = [
         2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.0
@@ -41,13 +70,15 @@ describe('overallrank model integration tests', () => {
   });
 
   describe('calculateOverallRank', () => {
-    beforeAll(() => {
-      return setupTestDB();
-    });
-
     it('should calculate correctly when no ratings present', async () => {
+      // sitter #1
+      const sitter = await sitterModel.findOne({ where: { sitterid: 1 }});
+      expect(sitter).not.toBeNull();
+      const sitterid = sitter.get('sitterid');
+
       const model = OverallRankModel(testDB);
-      const o = model.build({ sitterid: 3 });
+      const o = model.build({ sitterid });
+
       await o.calculateOverallRank();
       expect(o.get('dirty')).toBe(0);
       expect(o.get('ratingcount')).toBe(0);
@@ -58,8 +89,13 @@ describe('overallrank model integration tests', () => {
     });
 
     it('should calculate correctly when fewer than 10 ratings present', async () => {
+      // sitter #2
+      const sitter = await sitterModel.findOne({ where: { sitterid: 2 }});
+      expect(sitter).not.toBeNull();
+      const sitterid = sitter.get('sitterid');
+
       const model = OverallRankModel(testDB);
-      const o = model.build({ sitterid: 1 });
+      const o = model.build({ sitterid });
       await o.calculateOverallRank();
       expect(o.get('dirty')).toBe(0);
       expect(o.get('sitterscore')).toBe(0.7692);
@@ -70,20 +106,24 @@ describe('overallrank model integration tests', () => {
     });
 
     it('should pass the 10 rating test listed in the project spec', async () => {
+      // sitter #3
+      const { sitterid } = await addUserOwnerAndSitter('Fred');
+
+      const owner = await ownerModel.findOne();
+      expect(owner).not.toBeNull();
+      const ownerid = owner.get('ownerid');
+
       const model = OverallRankModel(testDB);
-      const o = model.build({ sitterid: 2 });
+      const o = model.build({ sitterid });
 
       const reviewmodel = ReviewModel(testDB);
-      const promises = [];
       for (let ii=1; ii < 15; ii++) {
         let start = '2018-01-' + String(ii).padStart(2,'0');
         let end = start;
-        promises.push(reviewmodel.factory({
-          sitterid: 2, ownerid: 1, rating: 5, text: 'review #' + ii, start, end
-        }));
+
+        await addStayAndReview(sitterid,ownerid,start,end,5,'woof');
       }
 
-      await Promise.all(promises);
       await o.calculateOverallRank();
       expect(o.get('dirty')).toBe(0);
       expect(o.get('sitterscore')).toBe(0.7692);

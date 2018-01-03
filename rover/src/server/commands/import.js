@@ -15,40 +15,15 @@ log4js.configure({
 });
 const logger = log4js.getLogger('import');
 
+const DogModel = require('../model/dog')(db);
+const StayModel = require('../model/stay')(db);
 const UserModel = require('../model/user')(db);
 const SitterModel = require('../model/sitter')(db);
 const OwnerModel = require('../model/owner')(db);
 const ReviewModel = require('../model/review')(db);
-const ReviewTextModel = require('../model/reviewtext')(db);
 const OverallRankModel = require('../model/overallrank')(db);
 
-const cleanDB = async () => {
-  // To preserve foreign key constraints, drop and re-create
-  // the following order:  rank before review, review before sitter, etc.
-  const models = [
-    OverallRankModel,
-    ReviewModel,
-    ReviewTextModel,
-    SitterModel,
-    OwnerModel,
-    UserModel
-  ];
-  for (let m of models) {
-    await m.drop();
-  }
-  models.reverse();
-  for (let m of models) {
-    await m.sync();
-  }
-};
-
-// const cleanDB = async () => Promise.all([
-//   UserModel.sync(),
-//   SitterModel.sync({ force: true }),
-//   OwnerModel.sync({ force: true }),
-//   ReviewTextModel.sync({ force: true }),
-//   ReviewModel.sync({ force: true })
-// ]);
+const cleanDB = require('../cleandb')(db);
 
 const csvFilePath = path.resolve(appDirectory, 'data/reviews.csv');
 const csv = require('csvtojson');
@@ -108,13 +83,35 @@ const processDataRow = async (row) => {
   }).spread((owner, created) => {
     return owner;
   });
-  await ReviewModel.factory({
-    rating: row.rating,
+
+  // Add stay
+  const stay = await StayModel.create({
     ownerid: owner.get('ownerid'),
     sitterid: sitter.get('sitterid'),
-    text: row.text,
     start: row.start_date,
     end: row.end_date
+  });
+
+  // Add dogs! :)
+  let dogInfo = { ownerid: owner.get('ownerid') };
+  const dogNames = row.dogs.split('|');
+  const dogs = [];
+  for (let name of dogNames) {
+    dogs.push({ ...dogInfo, name });
+    await DogModel.findOrCreate({
+      where: { ...dogInfo, name }
+    }).spread((dog, created) =>  {
+      // TODO add dogstay records :)
+    });
+  }
+
+  // Add review and rating
+  await ReviewModel.factory({
+    text: row.text,
+    rating: row.rating,
+    stayid: stay.get('stayid'),
+    ownerid: owner.get('ownerid'),
+    sitterid: sitter.get('sitterid')
   });
 
   const overallrank = await OverallRankModel.findOrCreate({
@@ -145,6 +142,11 @@ const processDataRow = async (row) => {
 // Nicole G.|247|user1983@gmail.com|+17332435022
 //
 // TODO Oh wait I can add sanity check SQLs to this program!
+// * Duplicate sitters by name
+// * Duplicate owners by name
+// * Duplicate dogs by name, ownerid
+// * Stay with same sitter and owner user
+
 
 const runImport = async () => {
   logger.info('Starting import');

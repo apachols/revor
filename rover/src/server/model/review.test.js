@@ -8,11 +8,9 @@ describe('review model tests', () => {
   const rating = 5;
   const ownerid = 1;
   const sitterid = 1;
+  const stayid = 1;
   const reviewtextid = 1;
-  const userid = 1;
-  const start = '2017-12-30';
-  const end = '2017-12-31';
-  const validReview = { rating, reviewtextid, sitterid, ownerid, userid, start, end };
+  const validReview = { stayid, rating, reviewtextid, sitterid, ownerid };
 
   describe('data validation', () => {
     const model = ReviewModel(testDB);
@@ -39,19 +37,8 @@ describe('review model tests', () => {
     it('should error on empty string rating', async () => {
       await testBadInput(model.build({ ...validReview, rating: '' }));
     });
-    it('should error on bad start date', async () => {
-      await testBadInput(model.build({ ...validReview, start: 'asdf' }));
-    });
-    it('should error on bad end date', async () => {
-      await testBadInput(model.build({ ...validReview, end: 'asdf' }));
-    });
-    it('should error on start after end', async () => {
-      await testBadInput(model.build({ ...validReview, start: end, end: start }));
-    });
-    it('should work for start = end', async () => {
-      const r = model.build({ ...validReview, start: end, end: end });
-        await r.validate();
-        expect(r.get('ownerid')).toBe(ownerid);
+    it('should error on missing stay id', async () => {
+      await testBadInput(model.build({ ...validReview, stayid: undefined }));
     });
     // it('should not have same sitter and owner', async () => {
     //   To check for this we'd need to go to the database; not sure
