@@ -6,6 +6,8 @@ import './App.css';
 import Home from './Home'
 import Search from './Search'
 
+
+
 class App extends Component {
   render() {
     return (
