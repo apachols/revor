@@ -1,5 +1,3 @@
-const { logger } = require('./logger');
-
 const fs = require('fs');
 const path = require('path');
 
@@ -23,8 +21,8 @@ module.exports = environment => {
     return config;
   } catch (error) {
     const errmsg = 'Unable to load config: ' + configPath;
-    logger.error(errmsg);
-    logger.error(error);
+    console.error(errmsg);
+    console.error(error);
     throw error;
   }
 };

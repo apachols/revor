@@ -22,8 +22,10 @@ log4js.configure({
   categories: { default: { appenders: ['application'], level: useEnvironmentLevel } }
 });
 
+const appLogger = log4js.getLogger('application');
+
 module.exports = {
   file: morgan('combined', { stream: accessLogStream }),
   dev: morgan('dev'),
-  logger: log4js.getLogger('application')
+  logger: appLogger
 }
