@@ -1,4 +1,4 @@
-const { Op } = require('Sequelize');
+const { Op } = require('sequelize');
 // Silence deprecation warning from Sequelize
 const operatorsAliases = {
   $eq: Op.eq,
