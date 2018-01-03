@@ -1,0 +1,12 @@
+{
+  "apps" : [
+      {
+        "name": "rover",
+        "script": "./src/server/rover.js",
+        "watch": true,
+        "env": {
+          "NODE_ENV": "production",
+        }
+      }
+  ]
+}
