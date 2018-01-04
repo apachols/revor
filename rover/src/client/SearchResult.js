@@ -11,6 +11,8 @@ const SearchResult = props => (
     </div>
     <h3>{props.number}</h3>
     <div>Name: {props.sitter.name}</div>
+    <div>REVIEWS: {props.sitter.reviewCount}</div>
+    <div>REPEATS: {props.sitter.repeatCount}</div>
     <StarRatingComponent
         starCount={5}
         editing={false}
