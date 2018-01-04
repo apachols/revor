@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import './App.css';
 
@@ -12,13 +12,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header>
-          <Link to="/">Home</Link>
-          <div> </div>
-          <Link to="/search">Search</Link>
-        </header>
         <header className="App-header">
-          <h1 className="App-title">Welcome to Rover</h1>
+          <img className="logo" src="logo.png" alt="We're the dog people" />
         </header>
         <main>
           <Route exact path="/" component={Home} />

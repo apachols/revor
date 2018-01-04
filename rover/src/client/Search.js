@@ -2,25 +2,39 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import SearchResults from './SearchResults'
+
+import StarRatingComponent from 'react-star-rating-component';
+
+import './Search.css'
+
 import {
-  getSittersSearchResults
+  getSittersSearchResults,
+  changeMinimumRating
 } from './actions'
 
 export class Search extends Component {
   componentWillMount() {
-    this.props.getSittersSearchResults()
+    this.props.getSittersSearchResults(this.props.rating)
   }
+
+  onStarClick(nextValue, prevValue, name) {
+    this.props.changeMinimumRating(nextValue);
+    this.props.getSittersSearchResults(nextValue);
+  }
+
   render() {
     return (
       <div>
-        <h1>Search</h1>
-        <button onClick={() => this.props.getSittersSearchResults()}>SEARCH</button>
-        <p>searchresults:</p>
-        <div>
-          {this.props.pending ? "Loading..." :
-            JSON.stringify(this.props.sitters)
-          }
+        <div className="search-box">
+          <div>Show me sitters with mininum rating:</div>
+          <StarRatingComponent
+              starCount={5}
+              value={this.props.rating}
+              onStarClick={this.onStarClick.bind(this)}
+          />
         </div>
+        <SearchResults sitters={this.props.sitters} pending={this.props.pending} />
       </div>
     )
   }
@@ -28,10 +42,12 @@ export class Search extends Component {
 
 const mapStateToProps = state => ({
   sitters: state.search.sitters,
-  pending: state.search.pending
+  pending: state.search.pending,
+  rating: state.search.rating
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  changeMinimumRating,
   getSittersSearchResults
 }, dispatch)
 

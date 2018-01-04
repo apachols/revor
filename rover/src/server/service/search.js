@@ -6,11 +6,10 @@ const SearchService = (db) => {
 
   return {
     getSittersByOverallRank: (minRating) => {
-      const useMinRating = parseInt(minRating, 10) || 0;
       const query = {
         where:  {
           'ratingscore': {
-            [Op.gte]: useMinRating
+            [Op.gte]: minRating || 0
           }
         },
         include: [{
@@ -21,8 +20,17 @@ const SearchService = (db) => {
           ['overallrank', 'DESC']
         ]
       };
-
-      return overallrank.findAll(query);
+      return overallrank.findAll(query).then((results) => {
+        const formattedResults = [];
+        for (let result of results) {
+          formattedResults.push({
+            name: result.Sitter.dataValues.name,
+            image: result.Sitter.dataValues.image,
+            rating: result.ratingscore
+          });
+        }
+        return formattedResults;
+      });
     }
   }
 };

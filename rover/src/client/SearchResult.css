@@ -1,0 +1,9 @@
+.sitter-card {
+  width: 100%;
+  border: 1px solid black;
+  float: left;
+}
+
+.sitter-photo {
+  float: left;
+}

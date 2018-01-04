@@ -3,9 +3,11 @@ import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import './Home.css'
+
 const Home = props => (
   <div>
-    <h1>Home</h1>
+    <img className="hero-image" src="doggy.jpg" alt="Hi doggy!" />
     <button onClick={() => props.changePage()}>Go to SEARCH</button>
   </div>
 )

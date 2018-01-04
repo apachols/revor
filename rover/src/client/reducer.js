@@ -1,10 +1,17 @@
 const initialState = {
   sitters: [],
-  pending: false
+  pending: false,
+  rating: 1
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'CHANGERATING':
+      return {
+        ...state,
+        rating: action.rating
+      }
+
     case 'SEARCHRESULTS_PENDING':
       return {
         ...state,

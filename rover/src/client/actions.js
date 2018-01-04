@@ -1,30 +1,29 @@
 import axios from 'axios';
 
-const getUsers = async () => {
+const getSitters = async (minRating) => {
   const p = await axios({
     method: 'get',
-    url: 'api/users',
+    url: 'api/sitter/search?rating='+minRating
   });
   return {
     results: p.data
   };
 };
 
-const getSitters = async () => {
-  const p = await axios({
-    method: 'get',
-    url: 'api/sitter/search',
-  });
-  return {
-    results: p.data
-  };
-};
-
-export const getSittersSearchResults = () => {
+export const getSittersSearchResults = (minRating) => {
   return dispatch => {
     dispatch({
       type: 'SEARCHRESULTS',
-      payload: getSitters()
+      payload: getSitters(minRating)
     });
   };
 };
+
+export const changeMinimumRating = (minRating) => {
+  return dispatch => {
+    dispatch({
+      type: 'CHANGERATING',
+      rating: minRating
+    });
+  };
+}
