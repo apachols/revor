@@ -29,6 +29,7 @@ export class Search extends Component {
         <div className="search-box">
           <div>Show me sitters with mininum rating:</div>
           <StarRatingComponent
+              name="searchStars"
               starCount={5}
               value={this.props.rating}
               onStarClick={this.onStarClick.bind(this)}

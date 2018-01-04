@@ -1,3 +1,7 @@
+.no-results {
+  padding: 20px;
+}
+
 .sitter-card {
   width: 100%;
   border: 1px solid black;

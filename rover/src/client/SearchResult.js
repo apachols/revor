@@ -14,11 +14,11 @@ const SearchResult = props => (
     <div>REVIEWS: {props.sitter.reviewCount}</div>
     <div>REPEATS: {props.sitter.repeatCount}</div>
     <StarRatingComponent
+        name="sitterStars"
         starCount={5}
         editing={false}
         value={props.sitter.rating}
     />
-    <div className="review-text">Review text goes here</div>
   </div>
 )
 

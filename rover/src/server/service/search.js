@@ -1,8 +1,16 @@
 const sequelize = require('sequelize');
 
+const pageSize = 20;
+
 const SearchService = (db) => {
   return {
-    getSittersByOverallRank: (minRating) => {
+    getSittersByOverallRank: (pageNumber, minRating) => {
+      // Sanitize the input again.  We'll escape it below.
+      minRating = parseInt(minRating, 10) || 0;
+      pageNumber = parseInt(pageNumber, 10) || 0;
+      let offset = Math.floor((pageNumber - 1) * pageSize);
+      offset = Math.max(offset, 0);
+
       return db.query(`
         select name, image, ratingscore as rating,
                count(reviewid) as reviewCount,
@@ -20,8 +28,9 @@ const SearchService = (db) => {
         where ratingscore >= ?
         group by sitterid, overallrank, name, image, ratingscore
         order by overallrank, sitterid desc
+        limit ? offset ?
       `,
-      { replacements: [ minRating ], type: sequelize.QueryTypes.RAW }
+      { replacements: [ minRating, pageSize, offset ], type: sequelize.QueryTypes.RAW }
       ).spread((results, metadata) => {
         return results;
       });
