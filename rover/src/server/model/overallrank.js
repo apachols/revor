@@ -59,6 +59,14 @@ const OverallRankModel = db => {
       defaultValue: Sequelize.NOW
     }
   }, {
+    indexes: [
+      { fields: ['overallrankid'] },
+      { fields: ['sitterid']},
+      // To speed up search, which filters by ratingscore
+      { fields: ['ratingscore']},
+      // For batch recalculation of rank records
+      { fields: ['dirty'] }
+    ],
     freezeTableName: true,
     tableName: 'overallrank',
     timestamps: false

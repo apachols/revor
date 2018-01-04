@@ -58,6 +58,10 @@ const StayModel = db => {
         }
       }
     },
+    indexes: [
+      { fields: ['stayid'] },
+      { fields: ['sitterid'] }
+    ],
     freezeTableName: true,
     tableName: 'stay',
     timestamps: false

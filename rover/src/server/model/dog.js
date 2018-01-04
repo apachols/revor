@@ -32,7 +32,11 @@ const DogModel = db => {
       defaultValue: Sequelize.NOW
     }
   }, {
-      freezeTableName: true,
+    indexes: [
+      { fields: ['dogid'] },
+      { fields: ['ownerid','name']}
+    ],
+    freezeTableName: true,
     tableName: 'dog',
     timestamps: false
   });

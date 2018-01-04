@@ -70,6 +70,11 @@ const ReviewModel = db => {
         }
       }
     },
+    indexes: [
+      { fields: ['reviewid'] },
+      { fields: ['sitterid'] }
+    ],
+
     freezeTableName: true,
     tableName: 'review',
     timestamps: false

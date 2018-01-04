@@ -40,7 +40,11 @@ const OwnerModel = db => {
       defaultValue: Sequelize.NOW
     }
   }, {
-      freezeTableName: true,
+    indexes: [
+      { fields: ['ownerid'] },
+      { fields: ['userid','name'] }
+    ],
+    freezeTableName: true,
     tableName: 'owner',
     timestamps: false
   });

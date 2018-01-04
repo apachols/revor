@@ -35,6 +35,10 @@ const UserModel = db => db.define('user', {
     defaultValue: Sequelize.NOW
   }
 }, {
+  indexes: [
+    { fields: ['userid'] },
+    { fields: ['email','phone']}
+  ],
   // sequelize likes to pluralize table names
   freezeTableName: true,
   tableName: 'user',

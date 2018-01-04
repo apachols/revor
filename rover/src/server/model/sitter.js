@@ -40,6 +40,10 @@ const SitterModel = db => {
       defaultValue: Sequelize.NOW
     }
   }, {
+    indexes: [
+      { fields: ['sitterid'] },
+      { fields: ['userid','name'] }
+    ],
     // sequelize likes to pluralize table names
     freezeTableName: true,
     tableName: 'sitter',
