@@ -29,7 +29,7 @@ const compareRankFields = (before, after, fields) => {
     if (left !== right) {
       differences++;
       logger.error(
-        `sitter ${overallrank.get('sitterid')} differs in ${field}, before ${left} after ${right}`
+        `sitter ${before['sitterid']} differs in ${field}, before ${left} after ${right}`
       );
     }
   }

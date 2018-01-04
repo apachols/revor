@@ -18,9 +18,16 @@ import { Search } from './Search';
 it('renders without crashing', () => {
   const div = document.createElement('div');
 
-  const testfn = () => { console.log('beep'); }
+  const testfn = () => { return []; }
 
   ReactDOM.render(
-      <Search getSittersSearchResults={testfn}/>
+      <Search
+        getSittersSearchResults={testfn}
+        sitters={[]}
+        totalPages={0}
+        pageNumber={1}
+        rating={1}
+        pending={false}
+      />
     , div);
 });
