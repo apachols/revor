@@ -6,7 +6,7 @@ import {
   getSittersSearchResults
 } from './actions'
 
-class Search extends Component {
+export class Search extends Component {
   componentWillMount() {
     this.props.getSittersSearchResults()
   }
