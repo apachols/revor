@@ -1,3 +1,17 @@
+/**
+ * Import the data from the following CSV file into the database:
+ *
+ *   data/reviews.csv
+ *
+ * Targets a database based on NODE_ENV, which reads:
+ *
+ *   config/{NODE_ENV}.js
+ *
+ * Writes to log file at
+ *
+ *   logs/app.log
+ */
+
 const db = require('../db');
 
 const fs = require('fs');
@@ -38,7 +52,12 @@ const getDataCSV = async () => {
   })
 }
 
-// add all the data to the database!
+/**
+ * Add a single row of CSV data to the database
+ *
+ * @param  {Object}  row data
+ * @return {Promise}
+ */
 const processDataRow = async (row) => {
   const sitterUser = await UserModel.findOrCreate({
     where: {
@@ -75,7 +94,11 @@ const processDataRow = async (row) => {
     return owner;
   });
 
-  // Add stay
+  if (owner.get('userid') === sitter.get('userid')) {
+    throw new Error(`Owner ${row.owner} cannot dog sit for themself!`);
+  }
+
+  // Add stay record; each review is for a stay
   const stay = await StayModel.create({
     ownerid: owner.get('ownerid'),
     sitterid: sitter.get('sitterid'),
@@ -96,7 +119,7 @@ const processDataRow = async (row) => {
     });
   }
 
-  // Add review and rating
+  // Add review, text and rating
   await ReviewModel.factory({
     text: row.text,
     rating: row.rating,
@@ -105,6 +128,7 @@ const processDataRow = async (row) => {
     sitterid: sitter.get('sitterid')
   });
 
+  // Add overall rank
   const overallrank = await OverallRankModel.findOrCreate({
     where: { sitterid: sitter.get('sitterid') }
   }).spread((overallrank, created) => {
@@ -132,13 +156,15 @@ const processDataRow = async (row) => {
 // Lisa H.|242|user9272@hotmail.com|+19050712311
 // Nicole G.|247|user1983@gmail.com|+17332435022
 //
-// TODO Oh wait I can add sanity check SQLs to this program!
+// TODO We could add sanity check SQLs to this program:
 // * Duplicate sitters by name
 // * Duplicate owners by name
 // * Duplicate dogs by name, ownerid
-// * Stay with same sitter and owner user
 
-
+/**
+ * Clear the database, read the CSV file and run the import!
+ * @return {Promise}
+ */
 const runImport = async () => {
   logger.info('Starting import');
 
@@ -153,7 +179,11 @@ const runImport = async () => {
 
   console.time('processData');
   for (let row of data) {
-    await(processDataRow(row));
+    try {
+      await(processDataRow(row));
+    } catch (error) {
+      logger.error(`${JSON.stringify({...row, text:undefined})} HAS ERROR ${error}`);
+    }
   }
   console.timeEnd('processData');
   await db.close().then(() => logger.info('Import complete'));

@@ -8,6 +8,9 @@ const ReviewModel = require('../model/review');
 const SitterModel = require('../model/sitter');
 const StayModel = require('../model/stay');
 
+/**
+ * Adds test data for a stay and a review
+ */
 const addStayAndReview = async (sitterid, ownerid, start, end, rating, text) => {
   const stayModel = StayModel(testDB);
   const reviewModel = ReviewModel(testDB);
@@ -19,6 +22,9 @@ const addStayAndReview = async (sitterid, ownerid, start, end, rating, text) => 
   });
 }
 
+/**
+ * Adds test data for a user, and a sitter and an owner record for that user
+ */
 const addUserOwnerAndSitter = async(name) => {
   const userModel = UserModel(testDB);
   const sitterModel = SitterModel(testDB);

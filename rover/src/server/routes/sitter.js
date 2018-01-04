@@ -1,7 +1,9 @@
 const { logger } = require('../logger');
 
-/*
- * /api/sitter route handlers
+/**
+ * [exports description]
+ * @param  {Object} SearchService  Knows how to get search results
+ * @return {Object}                Handler object with sitterSearch method
  */
 module.exports = SearchService => {
   const sitterSearch = async ctx => {

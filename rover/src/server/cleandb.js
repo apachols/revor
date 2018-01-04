@@ -1,3 +1,9 @@
+/**
+ * Be careful not to call this on production after the import has been run...
+ *
+ * @param  {Object} db  sequelize db connection instance
+ * @return {Object}     dbCleaner which will drop and rebuild all tables
+ */
 const cleanDB = db => {
 
   const DogModel = require('./model/dog')(db);

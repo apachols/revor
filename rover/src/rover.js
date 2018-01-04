@@ -1,69 +1,18 @@
-
-                    // import React from 'react'
-                    // import { createStore } from 'redux'
-                    // import { Provider } from 'react-redux'
-                    //
-                    // import rootReducer from './client/root'
-                    //
-                    // import App from './client/App'
-                    // import { StaticRouter } from 'react-router-redux'
-
+/**
+ * Serves static assets out of the build directory:
+ *
+ *   build/
+ *
+ * Serves /api/ requests as well (look in routes/router.js):
+ *
+ *   /api/*
+ */
 const Koa = require('koa');
 
 //
 // Configure
 //
 const app = module.exports = new Koa();
-
-                                  // // This is fired every time the server side receives a request
-                                  // app.use(handleRender)
-                                  //
-                                  // function handleRender(ctx) {
-                                  //   // Create a new Redux store instance
-                                  //   const store = createStore(rootReducer)
-                                  //
-                                  //   // Render the component to a string
-                                  //   const html = renderToString(
-                                  //     <Provider store={store}>
-                                  //       <StaticRouter>
-                                  //       <div>
-                                  //         <App />
-                                  //       </div>
-                                  //       </StaticRouter>
-                                  //     </Provider>,
-                                  //   )
-                                  //
-                                  //   // Grab the initial state from our Redux store
-                                  //   const preloadedState = store.getState()
-                                  //
-                                  //   // Send the rendered page back to the client
-                                  //   res.send(renderFullPage(html, preloadedState))
-                                  // }
-                                  // // TODO HARDCODED
-                                  // function renderFullPage(html, preloadedState) {
-                                  //   return `
-                                  //   <!DOCTYPE html>
-                                  //   <html lang="en">
-                                  //     <head>
-                                  //       <meta charset="utf-8">
-                                  //       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                                  //       <meta name="theme-color" content="#000000">
-                                  //       <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-                                  //       <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-                                  //
-                                  //       <title>Rover</title>
-                                  //       <link href="/static/css/main.29266132.css" rel="stylesheet">
-                                  //     </head>
-                                  //     <body>
-                                  //       <div id="root">${html}</div>
-                                  //       <script>
-                                  //         window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
-                                  //       </script>
-                                  //       <script type="text/javascript" src="/static/js/main.d1ba7f4a.js">
-                                  //     </body>
-                                  //   </html>
-                                  //     `
-                                  // }
 
 const serve = require('koa-static');
 app.use(serve('./build'));

@@ -1,6 +1,6 @@
 import sitterRoute from './sitter'
 
-it('should be defined', () => {
+it('should have the search route handler defined', () => {
   const { getSitters } = sitterRoute({});
   expect(getSitters).not.toBeUndefined();
 });

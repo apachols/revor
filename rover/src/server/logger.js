@@ -1,3 +1,7 @@
+/**
+ * Configures and returns logger objects
+ */
+
 const fs = require('fs');
 const path = require('path');
 const appDirectory = fs.realpathSync(process.cwd());
