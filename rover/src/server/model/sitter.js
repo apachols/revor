@@ -67,7 +67,7 @@ const SitterModel = db => {
       }
     }
     return Number((5 * count / alpha.length).toFixed(4));
-  }
+  };
 
   return model;
 }
