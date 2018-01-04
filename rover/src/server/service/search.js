@@ -4,16 +4,15 @@ const pageSize = 20;
 
 const SearchService = (db) => {
   return {
-    getSittersByOverallRank: (pageNumber, minRating) => {
+    getSittersByOverallRank: async (pageNumber, minRating) => {
       // Sanitize the input again.  We'll escape it below.
       minRating = parseInt(minRating, 10) || 0;
       pageNumber = parseInt(pageNumber, 10) || 0;
       let offset = Math.floor((pageNumber - 1) * pageSize);
       offset = Math.max(offset, 0);
 
-      return db.query(`
-        select name, image, ratingscore as rating,
-               count(reviewid) as reviewCount,
+      const coreQuery = `
+        select name, image, ratingscore as rating, count(reviewid) as reviewCount,
                count(distinct repeatOwnerId) as repeatCount
         from overallrank
         join sitter using (sitterid)
@@ -27,13 +26,23 @@ const SearchService = (db) => {
         ) as repeatClients using(sitterid)
         where ratingscore >= ?
         group by sitterid, overallrank, name, image, ratingscore
-        order by overallrank, sitterid desc
-        limit ? offset ?
-      `,
-      { replacements: [ minRating, pageSize, offset ], type: sequelize.QueryTypes.RAW }
-      ).spread((results, metadata) => {
+      `;
+
+      const totalRows = await db.query(
+        `select count(1) as totalRows from (${coreQuery})`,
+        { replacements: [ minRating ], type: sequelize.QueryTypes.RAW }
+      ).spread((results) => {
+        return results[0].totalRows;
+      });
+
+      const pageResults = await db.query(
+        `${coreQuery} order by overallrank, sitterid desc limit ? offset ?`,
+        { replacements: [ minRating, pageSize, offset ], type: sequelize.QueryTypes.RAW }
+      ).spread((results) => {
         return results;
       });
+
+      return { totalRows, pageResults };
     }
   }
 };

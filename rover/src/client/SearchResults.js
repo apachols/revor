@@ -2,22 +2,38 @@ import React from 'react'
 
 import SearchResult from './SearchResult'
 
+import Pager from './Pager'
+
 const noResultsMessage = "We couldn't find any sitters that matched your criteria"
 
-const SearchResults = props => (
-  <div>
-    <div>
-      {props.pending ? "Loading..." :
-        props.sitters.length === 0 ? <div className='no-results'>{noResultsMessage}</div> :
-        props.sitters.map((sitter, index) =>
-          <SearchResult key={index} number={index+1} sitter={sitter} />
-        )
-      }
+const SearchResults = props => {
+  if (props.pending) {
+    return <div className='loading'>"Loading..."</div>;
+  }
+  if (props.sitters.length === 0) {
+    return <div className='no-results'>{noResultsMessage}</div>
+  }
+  return (
+    <div className='search-results'>
+      <div className='results'>
+        {
+          props.sitters.map((sitter, index) =>
+            <SearchResult
+              key={index}
+              number={index+1}
+              sitter={sitter}
+            />
+          )
+        }
+      </div>
+      <div className="pager">
+        <Pager
+          currentPage={props.pageNumber}
+          totalPages={props.totalPages}
+          onChange={props.changePageNumber}/>
+      </div>
     </div>
-    <div className="pager">
-      TODO PAGER
-    </div>
-  </div>
-)
+  )
+}
 
 export default SearchResults
