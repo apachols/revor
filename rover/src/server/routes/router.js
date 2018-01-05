@@ -1,5 +1,7 @@
 const router = require('koa-router')();
 
+const send = require('koa-send');
+
 /**
  * Create handlers with db connection 'db', and set those handlers
  * to catch api/* routes.
@@ -12,13 +14,10 @@ module.exports = db => {
   const { sitterSearch } = require('./sitter')(SearchService);
 
   router
-    .get('/search', async function(ctx){
-      ctx.redirect('/#/search');
-    })
-    .get('/time', async function(ctx) {
-      ctx.body = Math.floor(new Date() / 1000);
-    })
-    .get('/api/sitter/search', sitterSearch);
+    .get('/api/sitter/search', sitterSearch)
+    .get('*', async (ctx) => {
+      await send(ctx, 'build/index.html');
+    });
 
   return router;
 };
