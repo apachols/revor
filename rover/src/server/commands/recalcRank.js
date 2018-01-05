@@ -48,7 +48,7 @@ const recalcRank = async () => {
     where: { dirty: 1 }
   });
 
-  logger.info(`Recalculating ${dirty.length} dirty records`);
+  logger.info(`Recalculating ${dirty.length} rank records`);
 
   let totalDifferences = 0;
   const fieldsToCompare = ['overallrank', 'sitterscore', 'ratingcount', 'ratingtotal', 'ratingscore'];

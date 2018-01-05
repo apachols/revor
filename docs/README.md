@@ -15,12 +15,12 @@ I used sqlite3 databases for testing and local development; on OSX, the homebrew
 
 ### Development
 ##### Test
-Run the unit tests: `npm test`
+* Run the unit tests: `npm test`
 
-Integration tests: `npm run test:int`
+* Integration tests: `npm run test:int` (creates sqlite3 db `test.db` in the project folder)
 
 ##### Run locally
-* Run the CSV import locally (creates sqlite3 db in `rover.db` in project folder):
+* Run the CSV import locally (creates sqlite3 db `rover.db` in project folder):
 
 ```
 $ node src/server/commands/import.js
@@ -34,7 +34,7 @@ $ cat logs/app.log
 [2018-01-05T11:32:25.253] [INFO] application - Clean db complete
 [2018-01-05T11:32:41.217] [INFO] application - Import complete
 [2018-01-05T11:33:46.012] [INFO] application - Starting recalc
-[2018-01-05T11:33:46.068] [INFO] application - Recalculating 100 dirty records
+[2018-01-05T11:33:46.068] [INFO] application - Recalculating 100 records
 [2018-01-05T11:33:46.620] [INFO] application - found 0 differences after recalculation
 [2018-01-05T11:33:46.621] [INFO] application - Recalc complete
 ```
@@ -104,7 +104,7 @@ Koa is a cool, minimal webserver framework 'from the team behind Express', which
 
 React with Redux is my most-used front-end framework-flavor, and I think it scales well to the point where you can have several teams working in the same codebase without tripping each other up.  You could argue that it isn't strictly necessary for a small project, but if this is production code and meant to expand, and Redux is great at scaling up and out.  
 
-I think Redux apps are easy to scale because the one-way data flow and the discipline of changing state only through reducer functions makes larger and larger apps easier to understand, and easier places to guarantee separation of concerns.  The downside is that because of that discpline, Redux is a bit boilerplate heavy, but I don't mind much, and I think there are current and future ways around that problem.
+I think Redux apps are easy to scale because the one-way data flow and the discipline of changing state only through reducer functions makes larger and larger apps easier to understand, and makes those apps easier places to guarantee separation of concerns.  The downside is that because of that discipline, Redux is a bit boilerplate heavy, but I don't mind much, and I think there are current and future ways around that problem.
 
 ## Database Schema
 For schema details, please see `src/server/models`, e.g. `src/server/models/user.js`.
@@ -144,7 +144,7 @@ I also included a left join to review, to count the total reviews, and a left jo
 I decided to stick with the Jest test running provided by create-react-app; I think the Jest test runner is pretty good but not great.  There were some spots where I had to use extra try-catch blocks and extra assertions to test some async behavior, and the test runner would sometimes forget to run all the tests until something had been broken for a while (I think this is configurable though).  Plus I've seen better matchers working with Mocha/Chai and Jasmine setups, perhaps those can be imported?
 
 ##### Unit - backend
-For these I made sure to dependency inject the database into the model objects, so it was easy to give them a testDB at run time.  The backend unit tests don't write or read the testDB, but they do use a Sequelize instance to do their model things.
+For these I made sure to dependency inject the database into the model objects, so it was easy to give them a testDB at test time.  The backend unit tests don't write or read the testDB, but they do use a Sequelize instance to do their model things.
 
 ##### Integration - backend
 The backend integration tests do use the test.db extensively, and therefore they take a long time and they *need to not run in parallel*, which you can get Jest to do with the --runInBand option.  I set these up so that you have to run them separately; the regular `npm test` command just runs the unit tests.
@@ -153,7 +153,7 @@ The backend integration tests do use the test.db extensively, and therefore they
 Here I used enzyme to test-mount components and test that their structural logic was working (not much testing of presentation details).  This is super easy and fun for presentation only components, and a little harder for Redux 'connected' components.  Next up here would be using enzyme's Shallow Rendering API to isolate components more effectively.
 
 ## Config
-I set up the app to use a config to load the correct database for the environment at hand.  The config loader reads NODE_ENV, and then loads `config/{NODE_ENV}.js` and connects to the database specified therein.  'npm test' runs in a sqlite3 test database `test.db`, and anything other than 'production' or 'test' runs in a local sqlite3 database `rover.db`.  I would move the configs out of the project folder going forward, but other than that you can use them so specify other environmental differences as well (these are configs which are NOT bundled into the front-end JS bundle, so no worries about exposing them to the end user).
+I set up the app to use a config to load the correct database for the environment at hand.  The config loader reads NODE_ENV, and then loads `config/{NODE_ENV}.js` and connects to the database specified therein.  'npm test' runs in a sqlite3 test database `test.db`, and anything other than 'production' or 'test' runs in a local sqlite3 database `rover.db`.  I would move the configs out of the project folder going forward, but other than that you can use them to specify other environmental differences as well (these are configs which are NOT bundled into the front-end JS bundle, so no worries about exposing them to the end user).
 
 ## Logging
 There are actually several logs, and I would refine this a bit so that you can get all the log info you need from only a couple of log files in the same place.
