@@ -156,11 +156,19 @@ Here I used enzyme to test-mount components and test that their structural logic
 I set up the app to use a config to load the correct database for the environment at hand.  The config loader reads NODE_ENV, and then loads `config/{NODE_ENV}.js` and connects to the database specified therein.  'npm test' runs in a sqlite3 test database `test.db`, and anything other than 'production' or 'test' runs in a local sqlite3 database `rover.db`.  I would move the configs out of the project folder going forward, but other than that you can use them so specify other environmental differences as well (these are configs which are NOT bundled into the front-end JS bundle, so no worries about exposing them to the end user).
 
 ## Logging
-There are actually several logs, and I would refine this a bit so the logging behavior is a bit more unified and predictable.
-* logs/app.log
+There are actually several logs, and I would refine this a bit so that you can get all the log info you need from only a couple of log files in the same place.
+* logs/app.log - logging for import and recalcRank, and INFO and ERROR logs from API server
+* logs/access.log - logs each http request to the API server
+* console.log - a couple of messages and errors that wouldn't fit satisfyingly into those other logs
 
 ## Next Steps
-* Server Side Rendering
-* mysql container
-* node server container
-* Code splitting
+##### Server Side Rendering
+This is a must have for a production single page app: it can take a long time for the user to download your whole javascript bundle, have the browser process it, and then have it render the page, so in order to provide customers with the best experience, they should get markup when the initial page request returns.
+
+As I mentioned before, I assumed it would be easier to add this to create-react-app after having started there, but there would have been a lot of build-level changes / re-engineering to do, so I had to skip it for this project.
+
+##### Code splitting
+Code splitting is important as your modern javascript app grows in size, because the user shouldn't have to download the code that powers the (for example) account settings page in order to render the homepage.  This is actually a little easier to do with create-react-app than SSR, apparently, and just like SSR I bet the earlier you do this the better; making big structural changes gets more complicated and time-consuming as a project grows.
+
+##### MySQL container / containerization
+The more differences you can prevent or eliminate between your production, test, and local development environment, the better; then you know what you're releasing into prod!  Using two containers (one for MySQL and one for the node server) would be a good next step for this project, and then trying out a container deployment service of some kind.
