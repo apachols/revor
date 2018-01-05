@@ -1,7 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import './Footer.css'
+import './Footer.css';
 
 const Footer = props => (
   <div className="footer">
@@ -15,6 +15,6 @@ const Footer = props => (
       </ul>
     </div>
   </div>
-)
+);
 
-export default Footer
+export default Footer;

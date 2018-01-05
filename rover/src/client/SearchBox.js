@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 import StarRatingComponent from 'react-star-rating-component';
 
-import './SearchBox.css'
+import './SearchBox.css';
 
 const SearchBox = props => (
   <div className="search-box">
@@ -16,6 +16,6 @@ const SearchBox = props => (
       />
     </div>
   </div>
-)
+);
 
-export default SearchBox
+export default SearchBox;

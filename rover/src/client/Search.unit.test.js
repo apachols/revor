@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Enzyme, { mount } from 'enzyme'
+import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 import { Search } from './Search';
@@ -67,4 +67,4 @@ describe('Search component unit tests', () => {
     enzymeWrapper.find('.mock-search-results').simulate('click');
     expect(useProps.getSittersSearchResults.mock.calls.length).toBe(2);
   });
-})
+});

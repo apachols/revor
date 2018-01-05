@@ -8,7 +8,7 @@ export const changePageNumber = (pageNumber) => {
     });
     return Promise.resolve();
   };
-}
+};
 
 const getSitters = async (pageNumber, minRating) => {
   const p = await axios({
@@ -36,4 +36,4 @@ export const changeMinimumRating = (minRating) => {
     });
     return Promise.resolve();
   };
-}
+};

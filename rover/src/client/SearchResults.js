@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-import SearchResult from './SearchResult'
+import SearchResult from './SearchResult';
 
-import Pager from './Pager'
+import Pager from './Pager';
 
-const noResultsMessage = "We couldn't find any sitters that matched your criteria"
+const noResultsMessage = "We couldn't find any sitters that matched your criteria";
 
 const SearchResults = props => {
   if (props.pending) {
@@ -37,7 +37,7 @@ const SearchResults = props => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SearchResults
+export default SearchResults;

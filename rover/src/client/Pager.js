@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const ReactUltimatePagination = require('react-ultimate-pagination');
 
@@ -13,11 +13,11 @@ const Page = props => {
       {props.value}
     </button>
   )
-}
+};
 
 const Wrapper = props => {
   return <div className="pagination">{props.children}</div>
-}
+};
 
 const itemTypeToComponent = {
   'PAGE': Page,

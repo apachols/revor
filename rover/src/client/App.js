@@ -4,9 +4,9 @@ import { Switch } from 'react-router';
 
 import './App.css';
 
-import Home from './Home'
-import Search from './Search'
-import Footer from './Footer'
+import Home from './Home';
+import Search from './Search';
+import Footer from './Footer';
 
 class App extends Component {
   render() {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import SearchResults from './SearchResults';
 
-import SearchResult from './SearchResult'
+import SearchResult from './SearchResult';
 
 import Pager from './Pager';
 
@@ -55,4 +55,4 @@ describe('SearchResults unit tests', () => {
       expect(enzymeWrapper.find(Pager).length).toBe(1);
     });
   });
-})
+});

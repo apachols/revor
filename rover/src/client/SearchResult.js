@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 import StarRatingComponent from 'react-star-rating-component';
 
-import './SearchResult.css'
+import './SearchResult.css';
 
 const SearchResult = props => (
   <div className="sitter-card">
@@ -34,6 +34,6 @@ const SearchResult = props => (
       </div>
     </div>
   </div>
-)
+);
 
-export default SearchResult
+export default SearchResult;

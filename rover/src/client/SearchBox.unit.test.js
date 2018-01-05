@@ -28,4 +28,4 @@ describe('SearchBox unit tests', () => {
     enzymeWrapper.find('i').at(0).simulate('click');
     expect(props.onRatingChange.mock.calls[0][0]).toBe(5);
   });
-})
+});

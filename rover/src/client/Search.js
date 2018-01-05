@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import SearchResults from './SearchResults'
+import SearchResults from './SearchResults';
 
 import SearchBox from './SearchBox';
 
-import './Search.css'
+import './Search.css';
 
 import {
   getSittersSearchResults,
   changeMinimumRating,
   changePageNumber
-} from './actions'
+} from './actions';
 
 export class Search extends Component {
   componentWillMount() {
-    this.props.getSittersSearchResults()
+    this.props.getSittersSearchResults();
   }
 
   onPageChange(nextValue, prevValue, name) {
@@ -43,7 +43,7 @@ export class Search extends Component {
           pending={this.props.pending}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -53,15 +53,15 @@ const mapStateToProps = state => ({
   sitters: state.search.sitters,
   pending: state.search.pending,
   rating: state.search.rating
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changePageNumber,
   changeMinimumRating,
   getSittersSearchResults
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search)
+)(Search);

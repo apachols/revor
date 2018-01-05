@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import { push } from 'react-router-redux'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { push } from 'react-router-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import SearchBox from './SearchBox'
+import SearchBox from './SearchBox';
 
-import './Home.css'
+import './Home.css';
 
 import {
   getSittersSearchResults,
   changeMinimumRating
-} from './actions'
+} from './actions';
 
 export class Home extends Component {
 
@@ -29,21 +29,21 @@ export class Home extends Component {
           onRatingChange={this.onRatingChange.bind(this)}
         />
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
   rating: state.search.rating
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changeMinimumRating,
   getSittersSearchResults,
   changePage: () => push('/search')
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home)
+)(Home);
