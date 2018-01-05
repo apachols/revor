@@ -5,7 +5,7 @@ import { Switch } from 'react-router';
 import './App.css';
 
 import Home from './Home';
-import Search from './Search';
+import Search from './Search/Search';
 import Footer from './Footer';
 
 class App extends Component {

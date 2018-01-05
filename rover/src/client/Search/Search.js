@@ -12,7 +12,7 @@ import {
   getSittersSearchResults,
   changeMinimumRating,
   changePageNumber
-} from './actions';
+} from '../actions';
 
 export class Search extends Component {
   componentWillMount() {
