@@ -9,9 +9,9 @@ Next up is a quick set of instructions for installing and running the project, f
 
 ### Initial setup
 * brew install sqlite
-* npm install
+* cd rover && npm install
 
-I used sqlite3 databases for testing and local development; on OSX, the homebrew install is easy.
+I used sqlite3 databases for testing and local development; on OSX, the homebrew install is easiest.
 
 ### Development
 ##### Test
@@ -92,7 +92,7 @@ Yep the feature that was missing was SQL_CALC_FOUND_ROWS, which is really good i
 ##### Sequelize
 In order to get the google-scraped Rover site data into the database, I wanted to use an ORM, for several reasons.  I wanted the backend code to be as productiony as possible, and I think a good ORM, used wisely, is a great strategy for writing disciplined and well tested backend code with a relational database setup like the one for this project.  (Plus, doesn't Django have a cool ORM? :wink:)
 
-Sequelize is pretty cool - it works with multiple flavors of SQL in the same project, which allowed me to switch seamlessly between sqlite3 and MySQL.  Plus it allowed me to define a bunch of strong Model classes as the foundation of the backend, and use those to power both the import and the API.  The sequelize models come with built in validators too, which helped me make sure all the data was being imported correctly.
+Sequelize is pretty cool - it works with multiple flavors of SQL in the same project, which allowed me to switch seamlessly between sqlite3 and MySQL.  Plus it allowed me to define a bunch of strong Model classes as the foundation of the backend, and use those to power both the import and the API.  The sequelize models also come with built in field validators, which helped me make sure all the data was being imported correctly.
 
 I dont' much like the SQLITE3 default date format that Sequelize left me with, and I mostly ignored this and other date related issues for this project because they don't effect the Search features that power the front end.
 
@@ -100,9 +100,45 @@ I dont' much like the SQLITE3 default date format that Sequelize left me with, a
 
 Koa is a cool, minimal webserver framework 'from the team behind Express', which I've used before and like very much.  Using the async / await style from the Koa docs is a lot of fun and makes Node.js server code easy to read.
 
-##### Redux
+##### Redux-*
 
-React with Redux is my most-used front-end framework, and I think it scales well to the point where you can have several teams working in the same codebase without tripping each other up.
+React with Redux is my most-used front-end framework-flavor, and I think it scales well to the point where you can have several teams working in the same codebase without tripping each other up.  You could argue that it isn't strictly necessary for a small project, but if this is production code and meant to expand, and Redux is great at scaling up and out.  
+
+I think Redux apps are easy to scale because the one-way data flow and the discipline of changing state only through reducer functions makes larger and larger apps easier to understand, and easier places to guarantee separation of concerns.  The downside is that because of that discpline, Redux is a bit boilerplate heavy, but I don't mind much, and I think there are current and future ways around that problem.
+
+## Database Schema
+For schema details, please see `src/server/models`, e.g. `src/server/models/user.js`.
+##### User
+This is the User that would authenticate to the site.  A User can be both a Sitter and an Owner!
+##### Sitter
+Both Sitter and Owner include a name field in this schema; going forward I would probably move that into User, since one user would probably always have the same Owner and Sitter name.  With the sitter score calculation in overallrank depending on name, however, it was helpful to have the name on the sitter record.
+##### Owner
+Very similar to Sitter; includes name field.
+##### Dog
+Each dog has an Owner!  Also I had intended to create a DogStay record (dogid, stayid), to indicate which dogs had been cared for in each Stay, but I didn't get to it.
+##### Stay
+Stay records are created when the Owner books with a Sitter; they include the dates of the stay and each Stay has one sitter and one owner.
+##### Review
+After a Stay is completed, an Owner can leave a Review, which has an associated Stay and a rating.  The text of the review is normalized out to a ReviewText record, to make queries on the review table faster.  Review also includes direct foreign key relationships to Sitter and Owner, which could be obtained by joining to Stay, but are very useful in search queries (e.g. for getting the text of the most recent review).
+##### ReviewText
+Normalized out to a separate table; Review.reviewtextid = ReviewText.reviewtextid.
+##### OverallRank
+Ah, now the good stuff.  We could join to all reviews on every search query, but that would be very stressful for our poor database.  Instead it would be better if the overallrank was calculated ahead of time, and stored separately in the database.
+
+ * Pro: calculate and store overall rank makes search queries much faster
+ * Con: need to keep overallrank table updated when reviews and ratings change!
+
+It would be best if we could **quickly** update the overall rank record every time a review was inserted, changed, or deleted, and also be sure the overallrank was consistent with the records in the database.
+
+By storing some extra information in overallrank, we can instantly calculate new overall rank without re-looking at all the reviews:  we just need to store the total and count of ratings, and the sitter score.  With those included on overallrank, we can instantly calculate a new overallrank using (total+newrating, count+1); this operation should be performed whenever a review is inserted, updated, or deleted.
+
+Then, just to make sure our aggregate records (overallrank) aren't too out of sync with our reviews, we mark the overallrank record field 'dirty' = 1, so we can find it later, using a batch process to recalculate all dirty records (`src/server/commands/recalcRank.js`).  We could run this script once an hour, or once a day, and it would log any discrepancies between the quick-method calculations and the IO-heavy calculations.  (I was pleased that after running the import script on our 100 test data sitters and recalculating them, the calculations matched exactly and there were no discrepancies).
+
+## Search
+
+To make the search as fast as possible, I skipped the ORM and included a raw SQL query which joins overallrank to sitter, and sorts by overallrank.overallrank descending.
+
+I also included a left join to review, to count the total reviews, and a left join to a temp table to count the number of repeat clients (group by sitterid and ownerid on stay).  This allowed me to put "X REVIEWS" and "Y REPEAT CLIENTS" in each search result! :smiley: For more details please see `src/server/service/search.js`.
 
 ## Config
 * production, local, test
@@ -113,12 +149,6 @@ React with Redux is my most-used front-end framework, and I think it scales well
 
 ## Logging
 * app.log
-
-## Front end
-* Folder structure
-
-## Production
-* https://www.adampacholski.com
 
 ## Next Steps
 * Server Side Rendering

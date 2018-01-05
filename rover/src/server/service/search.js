@@ -54,8 +54,7 @@ const SearchService = (db) => {
          left join (
 
            select sitterid, ownerid repeatOwnerId, count(stayid) as stayCount
-           from sitter
-           join stay using(sitterid)
+           from stay
            group by sitterid, ownerid
            having stayCount > 1
 
