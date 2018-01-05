@@ -35,13 +35,13 @@ export class Search extends Component {
     return (
       <div className="search-container">
         <SearchBox onRatingChange={this.onRatingChange.bind(this)} rating={this.props.rating} />
-          <SearchResults
-            changePageNumber={this.onPageChange.bind(this)}
-            pageNumber={this.props.pageNumber}
-            totalPages={this.props.totalPages}
-            sitters={this.props.sitters}
-            pending={this.props.pending}
-          />
+        <SearchResults
+          changePageNumber={this.onPageChange.bind(this)}
+          pageNumber={this.props.pageNumber}
+          totalPages={this.props.totalPages}
+          sitters={this.props.sitters}
+          pending={this.props.pending}
+        />
       </div>
     )
   }

@@ -30,8 +30,7 @@ module.exports = environment => {
     return config;
   } catch (error) {
     const errmsg = 'Unable to load config: ' + configPath;
-    console.error(errmsg);
-    console.error(error);
+    console.log(errmsg);
     throw error;
   }
 };

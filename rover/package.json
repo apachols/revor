@@ -7,6 +7,8 @@
   "dependencies": {
     "axios": "^0.17.1",
     "csvtojson": "^1.1.9",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "history": "^4.7.2",
     "koa": "^2.4.1",
     "koa-compress": "^2.0.0",
