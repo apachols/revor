@@ -16,8 +16,6 @@ export class Home extends Component {
 
   onRatingChange(nextValue, prevValue, name) {
     this.props.changeMinimumRating(nextValue).then(() => {
-      return this.props.getSittersSearchResults()
-    }).then(() => {
       return this.props.changePage();
     })
   }
