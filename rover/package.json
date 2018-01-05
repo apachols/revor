@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "concurrently": "^3.5.1",
     "csvtojson": "^1.1.9",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
@@ -35,7 +36,7 @@
     "sqlite3": "^3.1.13"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently --kill-others \"node src/rover.js\" \"react-scripts start\"",
     "build": "./node_modules/.bin/eslint src/server/ && react-scripts build",
     "pretest": "./node_modules/.bin/eslint src/server/",
     "test": "react-scripts test --env=jsdom --testPathPattern='unit'",
