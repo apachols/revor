@@ -12,6 +12,9 @@ module.exports = db => {
   const { sitterSearch } = require('./sitter')(SearchService);
 
   router
+    .get('/search', async function(ctx){
+      ctx.redirect('/#/search');
+    })
     .get('/time', async function(ctx) {
       ctx.body = Math.floor(new Date() / 1000);
     })
