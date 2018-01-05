@@ -1,5 +1,32 @@
+.search-container {
+  margin: 0 auto;
+  background-color: #ebeeef;
+}
+
 .search-box {
   padding-top: 25px;
   padding-bottom: 25px;
   background-color: #ebeeef;
+  border: 1px solid #ebeeef;
+  width: 100%;
+}
+
+.search-box .dv-star-rating-star > i {
+  font-size: 24px;
+}
+
+.search-results-container {
+  background-color: white;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-rating-text {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.rating-container {
+  vertical-align: middle;
+  display: inline-block;
 }

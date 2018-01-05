@@ -33,23 +33,27 @@ export class Search extends Component {
 
   render() {
     return (
-      <div>
+      <div className="search-container">
         <div className="search-box">
-          <div>Show me sitters with mininum rating:</div>
-          <StarRatingComponent
-            name="searchStars"
-            starCount={5}
-            value={this.props.rating}
-            onStarClick={this.onRatingChange.bind(this)}
+          <div className="search-rating-text">Show me sitters with mininum rating:</div>
+          <div className="rating-container">
+            <StarRatingComponent
+              name="searchStars"
+              starCount={5}
+              value={this.props.rating}
+              onStarClick={this.onRatingChange.bind(this)}
+            />
+          </div>
+        </div>
+        <div className="search-results-container">
+          <SearchResults
+            changePageNumber={this.onPageChange.bind(this)}
+            pageNumber={this.props.pageNumber}
+            totalPages={this.props.totalPages}
+            sitters={this.props.sitters}
+            pending={this.props.pending}
           />
         </div>
-        <SearchResults
-          changePageNumber={this.onPageChange.bind(this)}
-          pageNumber={this.props.pageNumber}
-          totalPages={this.props.totalPages}
-          sitters={this.props.sitters}
-          pending={this.props.pending}
-        />
       </div>
     )
   }
