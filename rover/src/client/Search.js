@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import SearchResults from './SearchResults'
 
-import StarRatingComponent from 'react-star-rating-component';
+import SearchBox from './SearchBox';
 
 import './Search.css'
 
@@ -34,18 +34,7 @@ export class Search extends Component {
   render() {
     return (
       <div className="search-container">
-        <div className="search-box">
-          <div className="search-rating-text">Show me sitters with mininum rating:</div>
-          <div className="rating-container">
-            <StarRatingComponent
-              name="searchStars"
-              starCount={5}
-              value={this.props.rating}
-              onStarClick={this.onRatingChange.bind(this)}
-            />
-          </div>
-        </div>
-        <div className="search-results-container">
+        <SearchBox onRatingChange={this.onRatingChange.bind(this)} rating={this.props.rating} />
           <SearchResults
             changePageNumber={this.onPageChange.bind(this)}
             pageNumber={this.props.pageNumber}
@@ -53,7 +42,6 @@ export class Search extends Component {
             sitters={this.props.sitters}
             pending={this.props.pending}
           />
-        </div>
       </div>
     )
   }

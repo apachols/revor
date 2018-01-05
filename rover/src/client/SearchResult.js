@@ -17,7 +17,10 @@ const SearchResult = props => (
       <div className="review-info">
         {
           props.sitter.repeatCount === 0 ? <div style={{height: "1em"}} /> :
-          <div className="review-info-item">{props.sitter.repeatCount} REPEAT CLIENTS</div>
+          <div className="review-info-item">
+            {props.sitter.repeatCount}
+            {props.sitter.repeatCount > 1 ? " REPEAT CLIENTS" : " REPEAT CLIENT"}
+          </div>
         }
         <div className="review-count review-info-item">{props.sitter.reviewCount} REVIEWS</div>
         <div className="rating-container">

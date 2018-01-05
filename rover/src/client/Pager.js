@@ -2,9 +2,14 @@ import React from 'react'
 
 const ReactUltimatePagination = require('react-ultimate-pagination');
 
+const activeStyle = {
+  fontWeight: 'bold',
+  color: '#00bd70'
+};
+
 const Page = props => {
   return (
-    <button onClick={props.onClick} style={props.isActive ? {fontWeight: 'bold'} : null}>
+    <button className="pager-button" onClick={props.onClick} style={props.isActive ? activeStyle : null}>
       {props.value}
     </button>
   )
@@ -16,10 +21,10 @@ const Wrapper = props => {
 
 const itemTypeToComponent = {
   'PAGE': Page,
-  'ELLIPSIS': props => <button onClick={props.onClick}>...</button>,
+  'ELLIPSIS': props => <button className="pager-button" onClick={props.onClick}>...</button>,
+  'PREVIOUS_PAGE_LINK': props => <button className="pager-button" onClick={props.onClick}>&lt;</button>,
+  'NEXT_PAGE_LINK': props => <button className="pager-button" onClick={props.onClick}>&gt;</button>,
   'FIRST_PAGE_LINK': props => '',
-  'PREVIOUS_PAGE_LINK': props => <button onClick={props.onClick}>Previous</button>,
-  'NEXT_PAGE_LINK': props => <button onClick={props.onClick}>Next</button>,
   'LAST_PAGE_LINK': props => '',
 };
 

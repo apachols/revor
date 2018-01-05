@@ -1,32 +1,43 @@
+.no-results {
+  padding: 20px;
+  background-color: white;
+}
+
 .search-container {
   margin: 0 auto;
   background-color: #ebeeef;
 }
 
-.search-box {
-  padding-top: 25px;
-  padding-bottom: 25px;
-  background-color: #ebeeef;
-  border: 1px solid #ebeeef;
-  width: 100%;
-}
-
-.search-box .dv-star-rating-star > i {
-  font-size: 24px;
+.search-results {
+  background-color: white;
 }
 
 .search-results-container {
-  background-color: white;
+  padding-bottom: 10px;
   max-width: 500px;
   margin: 0 auto;
 }
 
-.search-rating-text {
-  display: inline-block;
-  margin-right: 10px;
+.pager-container {
+  padding-top: 10px;
+  background-color: #ebeeef;
 }
 
-.rating-container {
-  vertical-align: middle;
-  display: inline-block;
+.pager {
+  background-color: white;
+  margin: 0 auto;
+  width: fit-content;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+}
+
+.results-page {
+  overflow: hidden;
+}
+
+.pager-button {
+  border: 0;
+  font-size: 16px;
+  background-color: white;
 }

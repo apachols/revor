@@ -1,0 +1,19 @@
+.search-box {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  width: 100%;
+}
+
+.search-box .dv-star-rating-star > i {
+  font-size: 24px;
+}
+
+.search-rating-text {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.rating-container {
+  vertical-align: middle;
+  display: inline-block;
+}

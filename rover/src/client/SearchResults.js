@@ -14,23 +14,27 @@ const SearchResults = props => {
     return <div className='no-results'>{noResultsMessage}</div>
   }
   return (
-    <div className='search-results'>
-      <div className='results'>
-        {
-          props.sitters.map((sitter, index) =>
-            <SearchResult
-              key={index}
-              number={index+1}
-              sitter={sitter}
-            />
-          )
-        }
+    <div className="search-results-container">
+      <div className='search-results'>
+        <div className='results-page'>
+          {
+            props.sitters.map((sitter, index) =>
+              <SearchResult
+                key={index}
+                number={index+1}
+                sitter={sitter}
+              />
+            )
+          }
+        </div>
       </div>
-      <div className="pager">
-        <Pager
-          currentPage={props.pageNumber}
-          totalPages={props.totalPages}
-          onChange={props.changePageNumber}/>
+      <div className="pager-container">
+        <div className="pager">
+          <Pager
+            currentPage={props.pageNumber}
+            totalPages={props.totalPages}
+            onChange={props.changePageNumber}/>
+        </div>
       </div>
     </div>
   )
