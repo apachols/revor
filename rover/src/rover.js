@@ -47,6 +47,7 @@ console.log('app listening on 3030');
 //
 const nodeCleanup = require('node-cleanup');
 nodeCleanup(function (exitCode, signal) {
+  console.log('FOUND EXIT', exitCode, signal);
   db.close().then(() => {
     console.log('db connection closed');
   });

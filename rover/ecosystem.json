@@ -2,7 +2,7 @@
   "apps" : [
       {
         "name": "rover",
-        "script": "./src/server/rover.js",
+        "script": "./src/rover.js",
         "watch": true,
         "env": {
           "NODE_ENV": "production",
