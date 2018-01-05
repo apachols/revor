@@ -35,7 +35,7 @@ const SearchService = (db) => {
          ) as repeatClients using(sitterid)
          where ratingscore >= ?
          group by overallrank, sitterid, name, image, ratingscore
-         order by overallrank, sitterid desc limit ? offset ?`,
+         order by overallrank desc, sitterid limit ? offset ?`,
         { replacements: [ minRating, pageSize, offset ], type: sequelize.QueryTypes.RAW }
       ).spread((results) => {
         return results;

@@ -35,7 +35,8 @@
     "start": "react-scripts start",
     "build": "./node_modules/.bin/eslint src/server/ && react-scripts build",
     "pretest": "./node_modules/.bin/eslint src/server/",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --testPathPattern='unit'",
+    "test:int": "react-scripts test --env=jsdom --testPathPattern='integ' --runInBand",
     "eject": "react-scripts eject"
   },
   "proxy": {

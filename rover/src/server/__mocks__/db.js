@@ -7,6 +7,26 @@ const OwnerModel = require('../model/owner');
 const ReviewModel = require('../model/review');
 const SitterModel = require('../model/sitter');
 const StayModel = require('../model/stay');
+const OverallRankModel = require('../model/overallrank');
+
+/**
+ * Create/update overall rank record for sitter from review data in test db
+ */
+const updateOverallRank = async (sitterid) => {
+  const sitterModel = SitterModel(testDB);
+  const overallRankModel = OverallRankModel(testDB);
+
+  const sitter = await sitterModel.findOne({ where: { sitterid }});
+  const overallrank = await overallRankModel.findOrCreate({
+    where: { sitterid }
+  }).spread((overallrank, created) => {
+    if (created) {
+      overallrank.set('sitterscore', sitter.sitterScore());
+    }
+    return overallrank;
+  });
+  return await overallrank.calculateOverallRank();
+}
 
 /**
  * Adds test data for a stay and a review
@@ -52,4 +72,4 @@ const addUserOwnerAndSitter = async(name) => {
   return { userid, sitterid, ownerid };
 }
 
-module.exports = { testDB, addStayAndReview, addUserOwnerAndSitter };
+module.exports = { testDB, addStayAndReview, addUserOwnerAndSitter, updateOverallRank };
