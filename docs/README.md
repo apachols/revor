@@ -123,7 +123,7 @@ After a Stay is completed, an Owner can leave a Review, which has an associated 
 ##### ReviewText
 Normalized out to a separate table; Review.reviewtextid = ReviewText.reviewtextid.
 ##### OverallRank
-Ah, now the good stuff.  We could join to all reviews on every search query, but that would be very stressful for our poor database.  Instead it would be better if the overallrank was calculated ahead of time, and stored separately in the database.
+Now for the good stuff!  We could join to all reviews on every search query, but that would be very stressful for our poor database.  Instead it would be better if the overallrank was calculated ahead of time, and stored separately in the database.
 
  * Pro: calculate and store overall rank makes search queries much faster
  * Con: need to keep overallrank table updated when reviews and ratings change!
@@ -132,7 +132,7 @@ It would be best if we could **quickly** update the overall rank record every ti
 
 By storing some extra information in overallrank, we can instantly calculate new overall rank without re-looking at all the reviews:  we just need to store the total and count of ratings, and the sitter score.  With those included on overallrank, we can instantly calculate a new overallrank using (total+newrating, count+1); this operation should be performed whenever a review is inserted, updated, or deleted.
 
-Then, just to make sure our aggregate records (overallrank) aren't too out of sync with our reviews, we mark the overallrank record field 'dirty' = 1, so we can find it later, using a batch process to recalculate all dirty records (`src/server/commands/recalcRank.js`).  We could run this script once an hour, or once a day, and it would log any discrepancies between the quick-method calculations and the IO-heavy calculations.  (I was pleased that after running the import script on our 100 test data sitters and recalculating them, the calculations matched exactly and there were no discrepancies).
+Then, just to make sure our aggregate records (overallrank) aren't too far out of sync with our reviews, we mark the overallrank record field 'dirty' = 1, so we can find it later, using a batch process to recalculate all dirty records (`src/server/commands/recalcRank.js`).  We could run this script once an hour, or once a day, and it would log any discrepancies between the quick-method calculations and the IO-heavy calculations.  (I was pleased that after running the import script on our 100 test data sitters and recalculating them, the calculations matched exactly and there were no discrepancies).
 
 ## Search
 
@@ -140,15 +140,24 @@ To make the search as fast as possible, I skipped the ORM and included a raw SQL
 
 I also included a left join to review, to count the total reviews, and a left join to a temp table to count the number of repeat clients (group by sitterid and ownerid on stay).  This allowed me to put "X REVIEWS" and "Y REPEAT CLIENTS" in each search result! :smiley: For more details please see `src/server/service/search.js`.
 
-## Config
-* production, local, test
-
 ## Tests
-* unit
-* integration
+I decided to stick with the Jest test running provided by create-react-app; I think the Jest test runner is pretty good but not great.  There were some spots where I had to use extra try-catch blocks and extra assertions to test some async behavior, and the test runner would sometimes forget to run all the tests until something had been broken for a while (I think this is configurable though).  Plus I've seen better matchers working with Mocha/Chai and Jasmine setups, perhaps those can be imported?
+
+##### Unit - backend
+For these I made sure to dependency inject the database into the model objects, so it was easy to give them a testDB at run time.  The backend unit tests don't write or read the testDB, but they do use a Sequelize instance to do their model things.
+
+##### Integration - backend
+The backend integration tests do use the test.db extensively, and therefore they take a long time and they *need to not run in parallel*, which you can get Jest to do with the --runInBand option.  I set these up so that you have to run them separately; the regular `npm test` command just runs the unit tests.
+
+##### Unit - frontend
+Here I used enzyme to test-mount components and test that their structural logic was working (not much testing of presentation details).  This is super easy and fun for presentation only components, and a little harder for Redux 'connected' components.  Next up here would be using enzyme's Shallow Rendering API to isolate components more effectively.
+
+## Config
+I set up the app to use a config to load the correct database for the environment at hand.  The config loader reads NODE_ENV, and then loads `config/{NODE_ENV}.js` and connects to the database specified therein.  'npm test' runs in a sqlite3 test database `test.db`, and anything other than 'production' or 'test' runs in a local sqlite3 database `rover.db`.  I would move the configs out of the project folder going forward, but other than that you can use them so specify other environmental differences as well (these are configs which are NOT bundled into the front-end JS bundle, so no worries about exposing them to the end user).
 
 ## Logging
-* app.log
+There are actually several logs, and I would refine this a bit so the logging behavior is a bit more unified and predictable.
+* logs/app.log
 
 ## Next Steps
 * Server Side Rendering
